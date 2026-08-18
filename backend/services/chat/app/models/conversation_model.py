@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime , timezone
-from sqlalchemy import (Column , String , DateTime)
+from sqlalchemy import (Column , String , DateTime, Integer)
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.database.database import Base
@@ -18,7 +18,7 @@ class ConversationModel(Base):
     )
 
     user_id = Column(
-        UUID(as_uuid=True),
+        Integer,
         nullable=False,
         index=True
     )

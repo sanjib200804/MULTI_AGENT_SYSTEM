@@ -38,7 +38,7 @@ class SessionRepository:
 
         key = f"refresh_token:{user_id}"
 
-        await self.redis.delete(key)
+        await self.redis_client.delete(key)
 
     async def close(self):
 

@@ -24,7 +24,7 @@ class ConversationUpdate(BaseModel):
 class ConversationResponse(BaseModel):
 
     id: UUID
-    user_id: UUID
+    user_id: int
     title: str
     created_at: datetime
     updated_at: datetime
@@ -37,7 +37,7 @@ class ConversationResponse(BaseModel):
 class ConversationDetailResponse(BaseModel):
 
     id: UUID
-    user_id: UUID
+    user_id: int
     title: str
     created_at: datetime
     updated_at: datetime

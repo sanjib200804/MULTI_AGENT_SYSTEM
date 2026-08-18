@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Response
 import httpx
-from core.config import settings
+from app.core.config import settings
 
 router = APIRouter(
     prefix="/api/auth",
@@ -94,7 +94,7 @@ async def get_me(request: Request):
     async with httpx.AsyncClient() as client:
 
         response = await client.get(
-            settings.AUTH_SERVICE_URL,
+            f"{settings.AUTH_SERVICE_URL}/auth/me",
             headers={
                 "X-User-ID": str(user_id),
                 "X-User-Email": user_email

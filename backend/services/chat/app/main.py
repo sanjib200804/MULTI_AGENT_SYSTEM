@@ -9,7 +9,7 @@ async def health_check():
 
     return {
         "status": "healthy",
-        "service": "auth-service"
+        "service": "chat-service"
     }
 
 

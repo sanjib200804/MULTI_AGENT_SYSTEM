@@ -10,8 +10,8 @@ PUBLIC_PATHS = {
     "/health",
     "/docs",
     "/openapi.json",
-    "/auth/login",
-    "/auth/logout",
+    "/api/auth/login",
+    "/api/auth/logout",
 }
 
 

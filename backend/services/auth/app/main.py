@@ -16,7 +16,7 @@ app = FastAPI(
     description="Authentication microservice for Multi-Agent AI System",
     version="1.0.0"
 )
-if '__name__' == '__main__':
+if __name__ == '__main__':
     uvicorn.run(
         'app.main:app',
         host = '0.0.0.0',

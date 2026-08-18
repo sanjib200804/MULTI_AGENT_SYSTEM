@@ -31,7 +31,7 @@ class UserRepository:
         )
     def get_by_id(self, user_id : int) -> UserModel | None:
          return (
-              self.db.query(UserModel).filter(user_id in UserModel.id).first()
+              self.db.query(UserModel).filter(UserModel.id == user_id).first()
          )
     
 

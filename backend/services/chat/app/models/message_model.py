@@ -6,6 +6,7 @@ from sqlalchemy import (
     Column,
     String,
     Text,
+    Integer,
     DateTime,
     ForeignKey,Enum as SQLEnum
 )
@@ -43,6 +44,14 @@ class MessageModel(Base):
     role = Column(SQLEnum(MessageRole),nullable=False,index=True)
 
     content = Column(Text , nullable=False)
+
+    agent_name = Column(String(255), nullable=True)
+
+    message_type = Column(String(50), nullable=False, default="text")
+
+    model_name = Column(String(255), nullable=True)
+
+    token_usage = Column(Integer, nullable=True)
 
     created_at = Column(
         DateTime(timezone=True),

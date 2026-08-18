@@ -1,11 +1,12 @@
 from fastapi import FastAPI
-from core.config import settings
-from routes.auth import router as auth_router
+from app.core.config import settings
+from app.routes.auth import router as auth_router
+from app.routes.chat import router as chat_router
 from app.middlewares.auth_middleware import AuthMiddleware
 import uvicorn
 
 app = FastAPI()
-if '__name__' == '__main__':
+if __name__ == '__main__':
     uvicorn.run(
         'app.main:app',
         host = '0.0.0.0',
@@ -25,3 +26,4 @@ async def health():
     }
 
 app.include_router(auth_router)
+app.include_router(chat_router)

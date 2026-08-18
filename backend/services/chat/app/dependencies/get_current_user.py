@@ -1,11 +1,9 @@
-from uuid import UUID
-
 from fastapi import Header, HTTPException, status
 
 
 async def get_current_user_id(
     x_user_id: str | None = Header(default=None)
-) -> UUID:
+) -> int:
 
     if not x_user_id:
         raise HTTPException(
@@ -14,7 +12,7 @@ async def get_current_user_id(
         )
 
     try:
-        return UUID(x_user_id)
+        return int(x_user_id)
 
     except ValueError:
 
