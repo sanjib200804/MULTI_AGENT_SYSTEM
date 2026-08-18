@@ -1,10 +1,12 @@
+import uuid
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column ,String ,Integer , Boolean , DateTime
 from datetime import datetime, timezone
 from app.database.database import Base
 
 class UserModel(Base):
     __tablename__ = 'users'
-    id = Column(Integer,primary_key=True ,index=True)
+    id = Column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4,unique=True,index=True)
     fullname = Column(String)
     email = Column(String , unique=True, nullable=True, index=True)
     firebase_id = Column(String , nullable=False , unique= True , index=True)

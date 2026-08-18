@@ -37,7 +37,7 @@ class AuthServices:
      try:
          payload = decode_token(refresh_token)
 
-         user_id = int(payload.get("sub"))
+         user_id = (payload.get("sub"))
 
      except Exception:
          # Even if token is invalid/expired,

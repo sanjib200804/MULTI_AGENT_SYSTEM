@@ -1,7 +1,7 @@
 from sqlalchemy.orm import session 
 from app.models.user_model import UserModel
 from app.schemas.user_schema import UserCreate
-
+from uuid import UUID
 
 class UserRepository:
     def __init__(self , db : session):
@@ -29,7 +29,7 @@ class UserRepository:
             return (
             self.db.query(UserModel).filter(UserModel.firebase_id == firebase_id).first()
         )
-    def get_by_id(self, user_id : int) -> UserModel | None:
+    def get_by_id(self, user_id : UUID) -> UserModel | None:
          return (
               self.db.query(UserModel).filter(UserModel.id == user_id).first()
          )

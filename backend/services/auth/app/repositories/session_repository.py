@@ -1,6 +1,6 @@
 from shared.redis.redis import redis_client
 
-
+from uuid import UUID
 
 class SessionRepository:
 
@@ -9,7 +9,7 @@ class SessionRepository:
 
     async def save_refresh_token(
         self,
-        user_id: int,
+        user_id: UUID,
         refresh_token: str,
         expire_seconds: int
     ):
@@ -24,7 +24,7 @@ class SessionRepository:
 
     async def get_refresh_token(
         self,
-        user_id: int
+        user_id: UUID
     ):
 
         key = f"refresh_token:{user_id}"
@@ -33,7 +33,7 @@ class SessionRepository:
 
     async def delete_refresh_token(
         self,
-        user_id: int
+        user_id: UUID
     ):
 
         key = f"refresh_token:{user_id}"

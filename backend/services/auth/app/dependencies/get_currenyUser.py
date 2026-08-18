@@ -28,7 +28,7 @@ async def get_current_user(access_token : str | None = Cookie(default=None),db :
         )
     user_repo = UserRepository(db=db)
 
-    user = user_repo.get_by_id(int(user_id))
+    user = user_repo.get_by_id(user_id)
     if not user :
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
