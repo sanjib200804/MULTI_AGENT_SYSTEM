@@ -1,9 +1,9 @@
 from fastapi import Cookie , HTTPException , Depends ,status
 from sqlalchemy.orm import Session
-from app.database.database import get_db
-from app.core.security import decode_token
-from app.repositories.user_repositories import UserRepository
-from app.schemas.user_schema import UserResponse
+from services.auth.app.database.database import get_db
+from services.auth.app.core.security import decode_token
+from services.auth.app.repositories.user_repositories import UserRepository
+from services.auth.app.schemas.user_schema import UserResponse
 
 async def get_current_user(access_token : str | None = Cookie(default=None),db : Session = Depends(get_db)) ->UserResponse:
     if not access_token:

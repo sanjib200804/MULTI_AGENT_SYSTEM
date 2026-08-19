@@ -1,6 +1,6 @@
 from sqlalchemy.orm import session 
-from app.models.user_model import UserModel
-from app.schemas.user_schema import UserCreate
+from services.auth.app.models.user_model import UserModel
+from services.auth.app.schemas.user_schema import UserCreate
 from uuid import UUID
 
 class UserRepository:

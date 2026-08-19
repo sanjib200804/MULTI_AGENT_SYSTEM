@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 from jose import JWTError, jwt
 
-from app.config.db_config import settings 
+from services.auth.app.config.db_config import settings
 
 def create_access_token(
     user_id: int,

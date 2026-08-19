@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session 
-from app.repositories.user_repositories import UserRepository
-from app.repositories.session_repository import SessionRepository
-from app.schemas.user_schema import UserCreate , UserResponse
-from app.core.security import create_access_token ,create_refresh_token , decode_token
+from services.auth.app.repositories.user_repositories import UserRepository
+from services.auth.app.repositories.session_repository import SessionRepository
+from services.auth.app.schemas.user_schema import UserCreate , UserResponse
+from services.auth.app.core.security import create_access_token ,create_refresh_token , decode_token
 
 class AuthServices:
     def __init__(self , db : Session):
