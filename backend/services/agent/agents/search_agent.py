@@ -1,5 +1,3 @@
-
-
 from core.state import AgentState
 from config.tavily import search_tool
 
@@ -13,7 +11,7 @@ async def search_agent(state: AgentState):
             max_results=3,
         )
 
-        print(response)
+        print("Tavily Response:", response)
 
         return {
             **state,
@@ -23,7 +21,7 @@ async def search_agent(state: AgentState):
 
     except Exception as error:
 
-        print(f"Search error: {error}")
+        print(f"Search Agent Error: {error}")
 
         return {
             **state,

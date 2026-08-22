@@ -1,27 +1,36 @@
+import json
+import uuid
+
 from core.state import AgentState
 from config.llmModels import get_llm_model
-from utils.agent_limit import checkAgentLimit
+from utils.agent_limit import check_agent_limit
 from utils.deduct_credits import deduct_credits
 
 
-async def coding_agent(state: AgentState):
+async def website_builder(state: AgentState):
 
     try:
-        # Check agent limit
-        await checkAgentLimit(
-            state.user_id,
-            "coding"
+        # -----------------------------
+        # CHECK AGENT LIMIT
+        # -----------------------------
+
+        await check_agent_limit(
+            state["user_id"],
+            "website"
         )
 
-        # Get models
+        # -----------------------------
+        # GET MODELS
+        # -----------------------------
+
         intent_llm = await get_llm_model("intent")
-        llm = await get_llm_model("coding")
+        llm = await get_llm_model("website")
 
         # -----------------------------
         # INTENT CLASSIFICATION
         # -----------------------------
 
-        intent_response = await intent_llm.invoke(
+        intent_response = await intent_llm.ainvoke(
             f"""
 You are an intent classifier.
 
@@ -36,7 +45,7 @@ CONVERSION
 DOCUMENTATION
 
 User Request:
-{state.prompt}
+{state["prompt"]}
 """
         )
 
@@ -49,9 +58,9 @@ User Request:
         if intent == "CODE_GENERATION":
 
             prompt = f"""
-You are CortexAI Coding Agent.
+You are CortexAI Website Builder.
 
-Generate the requested project.
+Generate the requested website.
 
 Default stack:
 - HTML
@@ -66,10 +75,11 @@ Rules:
 - Modern UI
 - CSS Variables
 - Flexbox/Grid
-- Smooth Scroll
-- Hover Effects
+- Smooth scrolling
+- Hover effects
 - Beautiful spacing
-- Single page unless user asks otherwise.
+- Clean semantic HTML
+- Single page unless user asks otherwise
 
 IMAGES
 =========================
@@ -106,33 +116,29 @@ Rules:
 - No markdown
 - No explanation
 - No extra text
-- No ``` 
+- No code fences
 - Never mention intent
 
 User Request:
-{state.prompt}
+{state["prompt"]}
 """
 
-            response = await llm.invoke(prompt)
-
-            # Parse JSON
-            import json
+            response = await llm.ainvoke(prompt)
 
             data = json.loads(response.content)
 
-            # Deduct credits
             await deduct_credits(
-                state.user_id,
-                "coding"
+                state["user_id"],
+                "website"
             )
 
             return {
                 **state,
-                "ai_response": "Code Generated Successfully.",
+                "ai_response": "Website Generated Successfully.",
                 "artifacts": [
                     {
-                        "id": str(__import__("uuid").uuid4()),
-                        "type": "Project",
+                        "id": str(uuid.uuid4()),
+                        "type": "Website",
                         "files": data.get("files", []),
                         "title": state.prompt
                     }
@@ -143,7 +149,7 @@ User Request:
         # REVIEW / DEBUG / EXPLANATION
         # -----------------------------
 
-        response = await llm.invoke(
+        response = await llm.ainvoke(
             f"""
 The user's request is:
 
@@ -169,14 +175,13 @@ Use headings like:
 
 User Request:
 
-{state.prompt}
+{state["prompt"]}
 """
         )
 
-        # Deduct credits
         await deduct_credits(
-            state.user_id,
-            "coding"
+            state["user_id"],
+            "website"
         )
 
         return {
@@ -187,10 +192,10 @@ User Request:
 
     except Exception as error:
 
-        print(f"Coding Agent Error: {error}")
+        print(f"Website Builder Error: {error}")
 
         return {
             **state,
-            "ai_response": "Failed to generate code",
+            "ai_response": "Failed to generate website",
             "artifacts": []
         }

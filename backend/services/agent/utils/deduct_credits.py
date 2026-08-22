@@ -1,4 +1,3 @@
-from botocore import response
 import os
 import httpx
 from core.settings import settings
@@ -13,12 +12,12 @@ async def deduct_credits(user_id : str, agent : str):
 
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{auth_service}/get_message/{user_id,agent}"
+                f"{auth_service}/get_message/{user_id}/{agent}"
             )
             response.raise_for_status()
 
             return response.json()
     except Exception as error:
-        print(f"Error getting messages: {error}")
+        print(f"Error deducting credits: {error}")
         return None
 

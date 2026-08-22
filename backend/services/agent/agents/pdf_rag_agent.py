@@ -9,19 +9,20 @@ from core.state import AgentState
 from config.vectorDB import vector_store
 from config.llmModels import get_llm_model
 
-from utils.agent_limit import checkAgentLimit
+from utils.agent_limit import check_agent_limit
 from utils.deduct_credits import deduct_credits
 
 
 async def pdf_rag(state: AgentState):
 
     try:
+
         # -----------------------------
         # CHECK AGENT LIMIT
         # -----------------------------
 
-        await checkAgentLimit(
-            state.user_id,
+        await check_agent_limit(
+            state["user_id"],
             "pdf"
         )
 
@@ -29,7 +30,15 @@ async def pdf_rag(state: AgentState):
         # PDF PATH
         # -----------------------------
 
-        file_path = state.file["path"]
+        file = state.get("file")
+
+        if not file:
+            return {
+                **state,
+                "ai_response": "No PDF file was uploaded."
+            }
+
+        file_path = file["path"]
 
         # -----------------------------
         # LOAD PDF
@@ -57,7 +66,7 @@ async def pdf_rag(state: AgentState):
         collection_name = f"pdf-{uuid.uuid4()}"
 
         # -----------------------------
-        # CREATE QDRANT VECTOR STORE
+        # CREATE VECTOR STORE
         # -----------------------------
 
         store = await vector_store(
@@ -70,7 +79,7 @@ async def pdf_rag(state: AgentState):
         # -----------------------------
 
         relevant_docs = await store.asimilarity_search(
-            state.prompt,
+            state["prompt"],
             k=5
         )
 
@@ -84,20 +93,20 @@ async def pdf_rag(state: AgentState):
         )
 
         # -----------------------------
-        # GET PDF MODEL
+        # GET LLM
         # -----------------------------
 
         llm = await get_llm_model("pdf-rag")
 
         # -----------------------------
-        # PROMPT
+        # MESSAGES
         # -----------------------------
 
         messages = [
 
             SystemMessage(
                 content="""
-You are CortexAI PDF Assistant.
+You are Agentra PDF Assistant.
 
 Rules:
 
@@ -119,7 +128,7 @@ Context:
 
 Question:
 
-{state.prompt}
+{state["prompt"]}
 """
             )
         ]
@@ -135,9 +144,13 @@ Question:
         # -----------------------------
 
         await deduct_credits(
-            state.user_id,
+            state["user_id"],
             "pdf"
         )
+
+        # -----------------------------
+        # RETURN
+        # -----------------------------
 
         return {
             **state,
@@ -161,12 +174,14 @@ Question:
 
         try:
 
-            if state.file and os.path.exists(
-                state.file["path"]
-            ):
-                os.remove(
-                    state.file["path"]
-                )
+            file = state.get("file")
+
+            if file:
+
+                file_path = file.get("path")
+
+                if file_path and os.path.exists(file_path):
+                    os.remove(file_path)
 
         except Exception as cleanup_error:
 

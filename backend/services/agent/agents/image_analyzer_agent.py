@@ -17,7 +17,7 @@ async def image_analyzer(state: AgentState):
         # ---------------------------------
 
         await check_agent_limit(
-            state.user_id,
+            state["user_id"],
             "image"
         )
 
@@ -29,11 +29,11 @@ async def image_analyzer(state: AgentState):
             "imageAnalyzer"
         )
 
-        # ---------------------------------
-        # READ IMAGE
-        # ---------------------------------
+        file = state.get("file")
+        if not file:
+            raise ValueError("No image file was uploaded.")
 
-        image_path = Path(state.file.path)
+        image_path = Path(file["path"])
 
         image_bytes = image_path.read_bytes()
 
@@ -45,11 +45,7 @@ async def image_analyzer(state: AgentState):
         # MIME TYPE
         # ---------------------------------
 
-        mime_type = getattr(
-            state.file,
-            "mimetype",
-            "image/jpeg"
-        )
+        mime_type = file.get("content_type", "image/jpeg")
 
         # ---------------------------------
         # MESSAGES
@@ -78,7 +74,7 @@ Rules:
                     {
                         "type": "text",
                         "text": (
-                            state.prompt
+                            state.get("prompt")
                             or "Analyze the image"
                         ),
                     },
@@ -108,7 +104,7 @@ Rules:
         # ---------------------------------
 
         await deduct_credits(
-            state.user_id,
+            state["user_id"],
             "vision"
         )
 
@@ -141,10 +137,12 @@ Rules:
         # ---------------------------------
 
         try:
-            image_path = Path(state.file.path)
+            file = state.get("file")
+            if file and file.get("path"):
+                image_path = Path(file["path"])
 
-            if image_path.exists():
-                image_path.unlink()
+                if image_path.exists():
+                    image_path.unlink()
 
         except Exception as cleanup_error:
 

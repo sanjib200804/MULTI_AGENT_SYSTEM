@@ -11,6 +11,8 @@ class UserModel(Base):
     email = Column(String , unique=True, nullable=True, index=True)
     firebase_id = Column(String , nullable=False , unique= True , index=True)
     avatar = Column(String,index=True)
+    credit = Column(Integer,default=100)
+    totalCredits = Column(Integer,default=100)
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,

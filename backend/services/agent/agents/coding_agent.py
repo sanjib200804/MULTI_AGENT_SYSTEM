@@ -14,7 +14,7 @@ async def coding_agent(state: AgentState):
         # -----------------------------
 
         await check_agent_limit(
-            state.user_id,
+            state["user_id"],
             "coding"
         )
 
@@ -65,7 +65,7 @@ DEBUGGING:
 
 User Request:
 
-{state.prompt}
+{state["prompt"]}
 """
         )
 
@@ -107,7 +107,7 @@ Return:
 
 User Request:
 
-{state.prompt}
+{state["prompt"]}
 """
             )
 
@@ -165,7 +165,7 @@ If the code is already correct, clearly say so.
 
 User Request:
 
-{state.prompt}
+{state["prompt"]}
 """
             )
 
@@ -220,7 +220,7 @@ Explain the important changes.
 
 User Request:
 
-{state.prompt}
+{state["prompt"]}
 """
             )
 
@@ -244,7 +244,7 @@ User Request:
         # -----------------------------
 
         await deduct_credits(
-            state.user_id,
+            state["user_id"],
             "coding"
         )
 

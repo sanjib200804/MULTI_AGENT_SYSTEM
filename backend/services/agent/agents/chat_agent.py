@@ -3,16 +3,22 @@ from langchain_core.messages import AIMessage ,SystemMessage, HumanMessage
 from utils.memory import get_Memory
 from core.state import AgentState
 from config.llmModels import get_llm_model
+from utils.agent_limit import check_agent_limit
+from utils.deduct_credits import deduct_credits
 
-async def chat_agent(state:AgentState):
+async def chat_agent(state: AgentState):
     try:
-        llm = get_llm_model('chat')
-        history = await get_Memory(state['conversationId'])
+        await check_agent_limit(
+            state["user_id"],
+            "chat"
+        )        
+        llm = await get_llm_model('chat')
+        history = await get_Memory(state['conversation_id'])
 
         search_context = ''
 
-        if state.get('search_result'):
-            search_context = earch_context = f"""
+        if state.get('search_results'):
+            search_context = f"""
 Web Search Results:
 
 {state["search_results"]}
@@ -50,39 +56,38 @@ Formatting:
 - Never generate large walls of text.
 """
 
-        messages= [
+        messages = [
             SystemMessage(content=system_prompt)
-
         ]
 
-        for msg in history :
-            if msg['role'] == 'user':
-                messages.append(
-                    HumanMessage(
-                        content=msg['content']
+        current_prompt_added = False
+        if history:
+            for msg in history:
+                role = msg.get('role')
+                content = msg.get('content', '')
+                if role == 'user':
+                    messages.append(HumanMessage(content=content))
+                elif role == 'assistant':
+                    messages.append(AIMessage(content=content))
 
-                    )
-                )
+            if messages and isinstance(messages[-1], HumanMessage) and messages[-1].content == state["prompt"]:
+                current_prompt_added = True
 
-            elif msg['role'] == 'assistant':
-                messages.append(
-                    AIMessage(content=msg['content'])
-                )
+        if not current_prompt_added:
+            messages.append(HumanMessage(content=state["prompt"]))
 
-                messages.append(
-                    HumanMessage(
-                        content=state['prompt']
-                    )
-                )
-                response = await llm.invoke(messages)
+        response = await llm.ainvoke(messages)
 
-            return {
+        await deduct_credits(
+            state["user_id"],
+            "chat"
+        )
+
+        return {
             **state,
             "ai_response": response.content
         }
 
-
-    
     except Exception as error:
         print(f"Chat agent error: {error}")
 

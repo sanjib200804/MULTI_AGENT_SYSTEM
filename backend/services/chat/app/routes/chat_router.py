@@ -35,12 +35,47 @@ from app.schemas.message_schema import (
 )
 
 from app.models.message_model import MessageRole
+from pydantic import BaseModel
+from app.repositories.message_repository import MessageRepository
 
 
 router = APIRouter(
     prefix="/chat",
     tags=["Chat"]
 )
+
+
+class SaveMessageRequest(BaseModel):
+    conversationId: UUID
+    role: MessageRole
+    content: str
+    images: list | None = None
+    artifacts: list | None = None
+
+
+@router.post(
+    "/save-message",
+    response_model=MessageResponse,
+    status_code=status.HTTP_201_CREATED
+)
+async def save_message(
+    data: SaveMessageRequest,
+    db: Session = Depends(get_db)
+):
+    message_repo = MessageRepository(db)
+    try:
+        message = message_repo.create(
+            conversation_id=data.conversationId,
+            role=data.role,
+            content=data.content
+        )
+        return MessageResponse.model_validate(message)
+    except Exception as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
 
 
 # =====================================================

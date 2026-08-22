@@ -15,6 +15,8 @@ class UserCreate(UserBase):
 
 class UserResponse(UserBase):
     id: UUID
+    credits : int
+    totalCredits : int
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
 

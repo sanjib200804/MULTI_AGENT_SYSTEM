@@ -5,7 +5,7 @@ import httpx
 
 from core.state import AgentState
 from config.llmModels import get_llm_model
-from utils.agent_limit import checkAgentLimit
+from utils.agent_limit import check_agent_limit
 from utils.deduct_credits import deduct_credits
 from utils.upload_to_s3 import upload_to_s3
 from utils.get_from_s3 import get_from_s3
@@ -19,8 +19,8 @@ async def vision_agent(state: AgentState):
         # CHECK AGENT LIMIT
         # ---------------------------------
 
-        await checkAgentLimit(
-            state.user_id,
+        await check_agent_limit(
+            state["user_id"],
             "image"
         )
 
@@ -57,7 +57,7 @@ Requirements:
 Return only the image prompt.
 
 User Request:
-{state.prompt}
+{state["prompt"]}
 """
         )
 
@@ -93,7 +93,7 @@ User Request:
         # ---------------------------------
 
         await deduct_credits(
-            state.user_id,
+            state["user_id"],
             "vision"
         )
 
@@ -109,12 +109,12 @@ User Request:
 
         await upload_to_s3(
             filename=filename,
-            file_data=image_bytes,
+            data=image_bytes,
             content_type="image/png"
         )
 
         # ---------------------------------
-        # GENERATE PRESIGNED URL
+        # PRESIGNED URL
         # ---------------------------------
 
         download_url = await get_from_s3(

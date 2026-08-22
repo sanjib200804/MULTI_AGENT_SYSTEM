@@ -4,11 +4,11 @@ from typing_extensions import TypedDict
 
 class AgentState(TypedDict, total=False):
     prompt: str
-    aiResponse: str
+    ai_response: str
     agent: str
-    conversationId: str
-    searchResults: list[Any]
+    conversation_id: str
+    search_results: list[Any]
     images: list[Any]
     artifacts: list[Any]
-    userId: str
+    user_id: str
     file: Any
