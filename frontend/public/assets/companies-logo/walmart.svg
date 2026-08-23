@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <g transform="translate(50, 50)">
+    <g transform="rotate(0)">
+      <path d="M-6 -10 C-6 -22 0 -35 0 -35 C0 -35 6 -22 6 -10 C6 0 -6 0 -6 -10 Z" fill="#ffc220"/>
+    </g>
+    <g transform="rotate(60)">
+      <path d="M-6 -10 C-6 -22 0 -35 0 -35 C0 -35 6 -22 6 -10 C6 0 -6 0 -6 -10 Z" fill="#ffc220"/>
+    </g>
+    <g transform="rotate(120)">
+      <path d="M-6 -10 C-6 -22 0 -35 0 -35 C0 -35 6 -22 6 -10 C6 0 -6 0 -6 -10 Z" fill="#ffc220"/>
+    </g>
+    <g transform="rotate(180)">
+      <path d="M-6 -10 C-6 -22 0 -35 0 -35 C0 -35 6 -22 6 -10 C6 0 -6 0 -6 -10 Z" fill="#ffc220"/>
+    </g>
+    <g transform="rotate(240)">
+      <path d="M-6 -10 C-6 -22 0 -35 0 -35 C0 -35 6 -22 6 -10 C6 0 -6 0 -6 -10 Z" fill="#ffc220"/>
+    </g>
+    <g transform="rotate(300)">
+      <path d="M-6 -10 C-6 -22 0 -35 0 -35 C0 -35 6 -22 6 -10 C6 0 -6 0 -6 -10 Z" fill="#ffc220"/>
+    </g>
+  </g>
+</svg>

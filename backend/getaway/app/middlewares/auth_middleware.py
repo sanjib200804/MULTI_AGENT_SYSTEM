@@ -27,8 +27,8 @@ class AuthMiddleware(
 
         path = request.url.path
 
-        # Public endpoints
-        if path in PUBLIC_PATHS:
+        # Public endpoints and CORS preflight OPTIONS requests
+        if request.method == "OPTIONS" or path in PUBLIC_PATHS:
 
             return await call_next(
                 request

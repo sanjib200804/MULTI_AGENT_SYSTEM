@@ -1,21 +1,26 @@
-import { signInWithPopup } from 'firebase/auth';
 import React from 'react'
-import { auth, googleProvider } from './config/firebase';
+import { Route, Routes } from 'react-router-dom'
+import Home from './pages/Home'
+import Chat from './pages/Chat'
+import NavBar from './components/NavBar'
+import LenisScroll from './components/LenisScroll'
+import AuthModal from './components/AuthModal'
 
 const App = () => {
-  const googl = async()=>{
-    const data = await signInWithPopup(auth,googleProvider)
-    console.log(data)
-
-  }
   return (
-    <div className='justify-center items-center ' >
-      <button className='h-20 w-40 bg-gray-700'
-      onClick={googl}>continue with google</button>
-    </div>
+    <>
+      <LenisScroll />
+      <AuthModal />
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/features" element={<Home />} />
+        <Route path="/pricing" element={<Home />} />
+        <Route path="/contact" element={<Home />} />
+        <Route path="/dashboard" element={<Chat />} />
+      </Routes>
+    </>
   )
 }
 
 export default App
-
-
