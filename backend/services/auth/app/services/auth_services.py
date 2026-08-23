@@ -1,11 +1,11 @@
 import httpx
 from jose import jwt, JWTError
-from services.auth.app.config.db_config import settings
+from app.config.db_config import settings
 from sqlalchemy.orm import Session 
-from services.auth.app.repositories.user_repositories import UserRepository
-from services.auth.app.repositories.session_repository import SessionRepository
-from services.auth.app.schemas.user_schema import UserCreate , UserResponse
-from services.auth.app.core.security import create_access_token ,create_refresh_token , decode_token
+from app.repositories.user_repositories import UserRepository
+from app.repositories.session_repository import SessionRepository
+from app.schemas.user_schema import UserCreate , UserResponse
+from app.core.security import create_access_token ,create_refresh_token , decode_token
 
 GOOGLE_CERTS_URL = "https://www.googleapis.com/robot/v1/metadata/x509/securetoken-system@system.gserviceaccount.com"
 

@@ -29,7 +29,7 @@ class MessageService:
     def save_msg(
         self,
         conversation_id: UUID,
-        user_id: int,
+        user_id: UUID,
         role: MessageRole,
         content: str
     ) -> MessageResponse:
@@ -77,7 +77,7 @@ class MessageService:
     def get_message(
         self,
         message_id: UUID,
-        user_id: int
+        user_id: UUID
     ) -> MessageResponse:
 
         message = (
@@ -119,7 +119,7 @@ class MessageService:
     def get_messages(
         self,
         conversation_id: UUID,
-        user_id: int
+        user_id: UUID
     ) -> list[MessageResponse]:
 
         conversation = (
@@ -159,7 +159,7 @@ class MessageService:
     def delete_message(
         self,
         message_id: UUID,
-        user_id: int
+        user_id: UUID
     ) -> bool:
 
         # Check ownership

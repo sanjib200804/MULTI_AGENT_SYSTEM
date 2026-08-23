@@ -14,7 +14,7 @@ async def get_messages(conversation_id: str):
 
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{chat_service}/get-messages/{conversation_id}"
+                f"{chat_service}/chat/get-messages/{conversation_id}"
             )
 
             response.raise_for_status()

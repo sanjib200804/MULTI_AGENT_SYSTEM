@@ -2,7 +2,7 @@ import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column ,String ,Integer , Boolean , DateTime
 from datetime import datetime, timezone
-from services.auth.app.database.database import Base
+from app.database.database import Base
 
 class UserModel(Base):
     __tablename__ = 'users'
@@ -18,3 +18,11 @@ class UserModel(Base):
         nullable=False,
         default=lambda: datetime.now(timezone.utc)
     )
+
+    @property
+    def credits(self) -> int:
+        return self.credit
+
+    @credits.setter
+    def credits(self, value: int):
+        self.credit = value

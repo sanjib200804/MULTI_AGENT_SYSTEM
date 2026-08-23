@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 export default function Chat() {
-    const { user, loading, logout, setIsAuthModalOpen } = useAuthContext();
+    const { user, loading, logout, setIsAuthModalOpen, refetchUser } = useAuthContext();
     const navigate = useNavigate();
     
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -109,7 +109,7 @@ export default function Chat() {
     const handleNewChat = async () => {
         try {
             const response = await api.post("/api/chat/conversations", {
-                title: "New Workspace"
+                title: "New Conversation"
             });
             const newConv = response.data;
             setConversations(prev => [newConv, ...prev]);
@@ -223,6 +223,7 @@ export default function Chat() {
                 created_at: new Date().toISOString()
             };
             setMessages(prev => [...prev, agentMsg]);
+            refetchUser();
         } catch (error) {
             console.error("Error from agent call:", error);
             const errorMsg = {
@@ -298,14 +299,14 @@ export default function Chat() {
 
                 {/* Navigation List */}
                 <div className="flex-1 overflow-y-auto px-3 py-2 space-y-6">
-                    {/* Active Workspaces */}
+                    {/* Active Conversations */}
                     <div>
                         <p className="px-3 text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">
-                            Recent Workspaces
+                            Recent Conversations
                         </p>
                         <div className="space-y-1">
                             {conversations.length === 0 ? (
-                                <p className="px-3 py-2 text-xs text-slate-600 italic">No workspaces</p>
+                                <p className="px-3 py-2 text-xs text-slate-600 italic">No conversations</p>
                             ) : (
                                 conversations.map(conv => (
                                     <div
@@ -324,7 +325,7 @@ export default function Chat() {
                                             className="flex flex-1 items-center gap-2.5 py-1 px-1 text-left min-w-0 cursor-pointer"
                                         >
                                             <History size={13} className="shrink-0 text-slate-500" />
-                                            <span className="truncate">{conv.title || "Untitled Workspace"}</span>
+                                            <span className="truncate">{conv.title || "Untitled Conversation"}</span>
                                         </button>
                                         
                                         <button
@@ -333,7 +334,7 @@ export default function Chat() {
                                                 handleDeleteConversation(conv.id);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 hover:bg-slate-800 rounded transition shrink-0 ml-1 cursor-pointer"
-                                            title="Delete Workspace"
+                                            title="Delete Conversation"
                                         >
                                             <Trash2 size={12} />
                                         </button>

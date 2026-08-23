@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Request, Response, Depends
 from sqlalchemy.orm import Session
 
-from services.auth.app.services.auth_services import AuthServices
-from services.auth.app.database.database import get_db
-from services.auth.app.schemas.user_schema import UserResponse, UserCreate, TokenLoginRequest
-from services.auth.app.dependencies.get_currenyUser import get_current_user
+from app.services.auth_services import AuthServices
+from app.database.database import get_db
+from app.schemas.user_schema import UserResponse, UserCreate, TokenLoginRequest
+from app.dependencies.get_currenyUser import get_current_user
 
 route = APIRouter(
     prefix="/auth",
@@ -17,14 +17,14 @@ route = APIRouter(
 
 @route.post("/login", response_model=UserResponse)
 async def login(
-    login_data: TokenLoginRequest,
+    user_data: UserCreate,
     response: Response,
     db: Session = Depends(get_db)
 ):
 
     service = AuthServices(db)
 
-    result = await service.login_with_token(login_data.id_token)
+    result = await service.login(user_data)
 
     # Access Token Cookie
     response.set_cookie(
@@ -97,3 +97,30 @@ async def get_me(
     current_user: UserResponse = Depends(get_current_user)
 ):
     return current_user
+
+from uuid import UUID
+
+@route.get("/get_message/{user_id}/{agent}")
+async def deduct_user_credits(
+    user_id: UUID,
+    agent: str,
+    db: Session = Depends(get_db)
+):
+    service = AuthServices(db)
+    user = service.user_repository.get_by_id(user_id)
+    if not user:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user.credit is None:
+        user.credit = 100
+
+    user.credit = max(0, user.credit - 1)
+    db.commit()
+    db.refresh(user)
+
+    return {
+        "status": "success",
+        "credits": user.credit,
+        "totalCredits": user.totalCredits
+    }

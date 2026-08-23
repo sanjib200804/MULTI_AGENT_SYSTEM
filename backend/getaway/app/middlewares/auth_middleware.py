@@ -92,9 +92,7 @@ class AuthMiddleware(
             )
 
         # Store user information
-        request.state.user_id = int(
-            user_id
-        )
+        request.state.user_id = user_id
 
         request.state.user_email = email
 

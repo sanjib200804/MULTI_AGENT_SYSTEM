@@ -23,7 +23,7 @@ async def agent(
         async with httpx.AsyncClient() as client:
 
             response = await client.post(
-                f"{settings.CHAT_SERVICE}/save-message",
+                f"{settings.CHAT_SERVICE}/chat/save-message",
                 json={
                     "conversationId": conversation_id,
                     "role": "user",
@@ -94,7 +94,7 @@ async def agent(
         async with httpx.AsyncClient() as client:
 
             response = await client.post(
-                f"{settings.CHAT_SERVICE}/save-message",
+                f"{settings.CHAT_SERVICE}/chat/save-message",
                 json={
                     "conversationId": conversation_id,
                     "role": "assistant",

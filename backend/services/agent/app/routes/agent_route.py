@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, Header
 
-from agent.services.agent_service import agent
+from app.services.agent_service import agent
 
 router = APIRouter()
 

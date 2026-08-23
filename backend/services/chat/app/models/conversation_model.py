@@ -18,7 +18,7 @@ class ConversationModel(Base):
     )
 
     user_id = Column(
-        Integer,
+        UUID(as_uuid=True),
         nullable=False,
         index=True
     )

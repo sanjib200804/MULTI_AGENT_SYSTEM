@@ -90,7 +90,7 @@ async def save_message(
 )
 async def create_conversation(
     data: ConversationCreate,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -116,7 +116,7 @@ async def create_conversation(
     response_model=list[ConversationResponse]
 )
 async def get_conversations(
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -133,7 +133,7 @@ async def get_conversations(
 )
 async def get_conversation(
     conversation_id: UUID,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -168,7 +168,7 @@ async def get_conversation(
 async def update_conversation(
     conversation_id: UUID,
     data: ConversationUpdate,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -202,7 +202,7 @@ async def update_conversation(
 )
 async def delete_conversation(
     conversation_id: UUID,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -247,7 +247,7 @@ async def delete_conversation(
 async def create_message(
     conversation_id: UUID,
     data: MessageCreate,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -283,7 +283,7 @@ async def create_message(
 )
 async def get_messages(
     conversation_id: UUID,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -317,7 +317,7 @@ async def get_messages(
 )
 async def get_message(
     message_id: UUID,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -350,7 +350,7 @@ async def get_message(
 )
 async def delete_message(
     message_id: UUID,
-    user_id: int = Depends(get_current_user_id),
+    user_id: UUID = Depends(get_current_user_id),
     db: Session = Depends(get_db)
 ):
 
@@ -380,5 +380,18 @@ async def delete_message(
             status_code=403,
             detail=str(e)
         )
+
+
+@router.get(
+    "/get-messages/{conversation_id}",
+    response_model=list[MessageResponse]
+)
+async def get_messages_by_conversation_id(
+    conversation_id: UUID,
+    db: Session = Depends(get_db)
+):
+    service = MessageService(db)
+    messages = service.message_repository.get_by_conversation_id(conversation_id)
+    return [MessageResponse.model_validate(m) for m in messages]
 
 

@@ -1,8 +1,12 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+
 from fastapi import FastAPI
 import uvicorn
-from services.auth.app.routes.auth_routes import route
-from services.auth.app.database.database import Base, engine
-from services.auth.app.config.db_config import settings
+from app.routes.auth_routes import route
+from app.database.database import Base, engine
+from app.config.db_config import settings
 
 
 # Create database tables

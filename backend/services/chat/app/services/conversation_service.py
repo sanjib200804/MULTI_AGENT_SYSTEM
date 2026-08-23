@@ -24,7 +24,7 @@ class ConversationService:
 
     def create_conversation(
         self,
-        user_id: int,
+        user_id: UUID,
         title: str | None = None
     ) -> ConversationResponse:
 
@@ -51,7 +51,7 @@ class ConversationService:
     def get_conversation(
         self,
         conversation_id: UUID,
-        user_id: int
+        user_id: UUID
     ) -> ConversationResponse:
 
         conversation = (
@@ -80,7 +80,7 @@ class ConversationService:
 
     def get_user_conversation(
         self,
-        user_id: int
+        user_id: UUID
     ) -> list[ConversationResponse]:
 
         conversations = (
@@ -103,7 +103,7 @@ class ConversationService:
     def update_title(
         self,
         conversation_id: UUID,
-        user_id: int,
+        user_id: UUID,
         title: str
     ) -> ConversationResponse:
 
@@ -141,7 +141,7 @@ class ConversationService:
     def delete_conversation(
         self,
         conversation_id: UUID,
-        user_id: int
+        user_id: UUID
     ) -> bool:
 
         # Check ownership

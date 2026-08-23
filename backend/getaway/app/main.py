@@ -10,6 +10,10 @@ import uvicorn
 app = FastAPI()
 
 app.add_middleware(
+    AuthMiddleware
+)
+
+app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
     allow_credentials=True,
@@ -22,11 +26,7 @@ if __name__ == '__main__':
         host = '0.0.0.0',
         port = settings.PORT,
         reload = True
-    )
-
-app.add_middleware(
-    AuthMiddleware
-)    
+    )    
 @app.get("/health")
 async def health():
 

@@ -7,7 +7,7 @@ class ConversationRepository:
         self.db = db
 
 
-    def create_conversation(self,user_id:int, title : str,  ) ->ConversationModel: 
+    def create_conversation(self,user_id:UUID, title : str,  ) ->ConversationModel: 
         conversation = ConversationModel(
             user_id =user_id,
             title = title
@@ -22,7 +22,7 @@ class ConversationRepository:
     def get_conservation_id(self, conversation_id : UUID) -> ConversationModel | None:
         return (self.db.query(ConversationModel).filter(ConversationModel.id == conversation_id).first())
 
-    def get_by_userId(self,user_id :int) -> list[ConversationModel]:
+    def get_by_userId(self,user_id :UUID) -> list[ConversationModel]:
         return (self.db.query(ConversationModel).filter(ConversationModel.user_id == user_id).order_by(ConversationModel.updated_at.desc()).all())
 
     def update_title(self,conversation_id:UUID , title:str)->ConversationModel:
