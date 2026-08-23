@@ -9,6 +9,7 @@ async def vector_store(docs, collection_name: str):
         documents=docs,
         embedding=embedding_model,
         url=settings.QDRANT_URL,
+        api_key = settings.QDRANT_API_KEY,
         collection_name=collection_name,
     )
 

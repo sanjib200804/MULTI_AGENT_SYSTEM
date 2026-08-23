@@ -29,9 +29,14 @@ class UserRepository:
             return (
             self.db.query(UserModel).filter(UserModel.firebase_id == firebase_id).first()
         )
-    def get_by_id(self, user_id : UUID) -> UserModel | None:
-         return (
-              self.db.query(UserModel).filter(UserModel.id == user_id).first()
-         )
+    def get_by_id(self, user_id: UUID | str) -> UserModel | None:
+        if isinstance(user_id, str):
+            try:
+                user_id = UUID(user_id)
+            except ValueError:
+                return None
+        return (
+            self.db.query(UserModel).filter(UserModel.id == user_id).first()
+        )
     
 

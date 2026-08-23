@@ -127,5 +127,28 @@ class AuthServices:
         "message": "Logout successful"
     }
 
+    async def refresh_access_token(self, refresh_token: str) -> dict:
+        from uuid import UUID
+        try:
+            payload = decode_token(refresh_token)
+            if payload.get("type") != "refresh":
+                from fastapi import HTTPException
+                raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+            user_id = payload.get("sub")
+            user = self.user_repository.get_by_id(UUID(user_id))
+            if not user:
+                from fastapi import HTTPException
+                raise HTTPException(status_code=401, detail="User not found")
+
+            access_token = create_access_token(user.id, user.email)
+            return {
+                "user": UserResponse.model_validate(user),
+                "access_token": access_token
+            }
+        except Exception as e:
+            from fastapi import HTTPException
+            raise HTTPException(status_code=401, detail=f"Token refresh failed: {str(e)}")
+
     
 

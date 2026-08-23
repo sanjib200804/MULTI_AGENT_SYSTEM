@@ -1,5 +1,6 @@
 from core.state import AgentState
 from config.tavily import search_tool
+from utils.deduct_credits import deduct_credits
 
 
 async def search_agent(state: AgentState):
@@ -12,6 +13,9 @@ async def search_agent(state: AgentState):
         )
 
         print("Tavily Response:", response)
+
+        if state.get("user_id"):
+            await deduct_credits(state["user_id"], "search")
 
         return {
             **state,

@@ -1,11 +1,11 @@
 from datetime import datetime, timedelta, timezone
-
+from uuid import UUID
 from jose import JWTError, jwt
 
 from services.auth.app.config.db_config import settings
 
 def create_access_token(
-    user_id: int,
+    user_id: UUID | str,
     email: str
 ) -> str:
 
@@ -28,7 +28,7 @@ def create_access_token(
 
 
 def create_refresh_token(
-    user_id: int,
+    user_id: UUID | str,
     email: str
 ) -> str:
 

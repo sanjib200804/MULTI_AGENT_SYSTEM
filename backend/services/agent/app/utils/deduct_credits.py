@@ -12,7 +12,7 @@ async def deduct_credits(user_id : str, agent : str):
 
         async with httpx.AsyncClient() as client:
             response = await client.get(
-                f"{auth_service}/get_message/{user_id}/{agent}"
+                f"{auth_service}/auth/get_message/{user_id}/{agent}"
             )
             response.raise_for_status()
 

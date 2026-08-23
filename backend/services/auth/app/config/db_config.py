@@ -6,8 +6,8 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str
     REDIS_URL: str = "redis://localhost:6379"
     JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 15
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    ACCESS_TOKEN_EXPIRE_MINUTES: int 
+    REFRESH_TOKEN_EXPIRE_DAYS: int 
     FIREBASE_PROJECT_ID: str = "multiagentai-e8c08"
 
     model_config = SettingsConfigDict(
