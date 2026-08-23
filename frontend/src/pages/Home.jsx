@@ -6,7 +6,6 @@ import {
     BrainCircuit,
     Check,
     Database,
-    Play,
     ShieldCheck,
     Sparkles,
     Workflow,
@@ -121,14 +120,6 @@ export default function Page() {
                         Start free trial
 
                         <ArrowRight size={17} />
-
-                    </button>
-
-                    <button className="flex h-12 items-center gap-2 rounded-lg border border-slate-300 bg-white/60 px-7 text-slate-700 backdrop-blur transition hover:border-purple-400 hover:text-purple-600 dark:border-slate-700 dark:bg-slate-900/40 dark:text-white">
-
-                        <Play size={17} />
-
-                        Watch demo
 
                     </button>
 

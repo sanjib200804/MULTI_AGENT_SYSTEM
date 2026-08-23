@@ -10,7 +10,7 @@ groq= ChatGroq(
 )
 
 gemini = ChatGoogleGenerativeAI(
-    model ="gemini-2.5-flash"
+    model ="gemini-3.6-flash"
 )
 
 mistral = ChatMistralAI(
