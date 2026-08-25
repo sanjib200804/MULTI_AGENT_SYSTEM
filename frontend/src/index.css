@@ -1,70 +1,89 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-    --font-poppins: "Poppins", sans-serif;
+    --font-inter: "Inter", sans-serif;
+    --font-jakarta: "Plus Jakarta Sans", sans-serif;
 }
+
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
 body {
-    @apply bg-white text-slate-800 dark:bg-gray-950 dark:text-white text-sm font-poppins antialiased;
+    @apply bg-slate-50 text-slate-900 dark:bg-[#0A0A0F] dark:text-slate-100 text-sm font-inter antialiased selection:bg-purple-500/25 selection:text-purple-300;
 }
 
 button {
     @apply cursor-pointer;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Background Grid Pattern */
+.bg-grid-mesh {
+    background-size: 32px 32px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
 }
 
-@keyframes scaleUp {
-    from { transform: scale(0.95); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+.dark .bg-grid-mesh {
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-.animate-fadeIn {
-    animation: fadeIn 0.2s ease-out forwards;
+.bg-grid-mesh-light {
+    background-size: 32px 32px;
+    background-image: 
+        linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
 }
 
-.animate-scaleUp {
-    animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Glassmorphism & Surface Utilities */
+.glass-panel {
+    @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-sm;
 }
 
-@keyframes backdropFadeIn {
-    from {
-        opacity: 0;
-        backdrop-filter: blur(0px);
-        background-color: rgba(0, 0, 0, 0);
-    }
-    to {
-        opacity: 1;
-        backdrop-filter: blur(12px);
-        background-color: rgba(0, 0, 0, 0.6);
-    }
+.glass-card-hover {
+    @apply transition-all duration-300 hover:border-purple-500/40 dark:hover:border-purple-500/40 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1;
 }
 
-@keyframes smoothOpen {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.97);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+/* Keyframe Animations */
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.4; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.03); }
 }
 
-.animate-backdropFade {
-    animation: backdropFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.animate-pulseGlow {
+    animation: pulseGlow 6s ease-in-out infinite;
 }
 
-.animate-smoothOpen {
-    animation: smoothOpen 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes floatSlow {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
 }
 
-/* Hide scrollbar utility */
+.animate-float {
+    animation: floatSlow 5s ease-in-out infinite;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.2);
+    border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.4);
+}
+
 .no-scrollbar::-webkit-scrollbar {
     display: none;
 }

@@ -38,7 +38,7 @@ export default function Sidebar({
             <aside
                 className={`
                     fixed top-16 bottom-0 left-0 z-40 flex w-72 flex-col
-                    bg-slate-50/95 dark:bg-slate-900/90 backdrop-blur-2xl
+                    bg-slate-50/95 dark:bg-[#0A0A0F]/90 backdrop-blur-2xl
                     border-r border-slate-200/80 dark:border-white/10
                     shadow-xl md:shadow-none
                     transition-transform duration-300 ease-out md:static md:translate-x-0 md:h-[calc(100vh-4rem)]
