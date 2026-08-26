@@ -18,3 +18,4 @@ langchain-groq
 langchain-mistralai
 langchain-text-splitters
 langgraph
+langchain-google-genai
