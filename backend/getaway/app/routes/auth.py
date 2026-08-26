@@ -1,147 +1,221 @@
 from fastapi import APIRouter, Request, Response
 import httpx
+
 from app.core.config import settings
+
 
 router = APIRouter(
     prefix="/api/auth",
-    tags=["Authentication"]
+    tags=["Authentication"],
 )
 
 
+async def copy_set_cookie(
+    source_response: httpx.Response,
+    target_response: Response,
+):
 
+    for cookie in source_response.headers.get_list(
+        "set-cookie"
+    ):
+
+        target_response.headers.append(
+            "set-cookie",
+            cookie,
+        )
+
+
+# ============================================================
+# LOGIN
+# ============================================================
 
 @router.post("/login")
-async def login(request: Request):
+async def login(
+    request: Request,
+):
 
     body = await request.body()
 
     headers = {
         "content-type": request.headers.get(
             "content-type",
-            "application/json"
-        )
+            "application/json",
+        ),
     }
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(
+        timeout=30.0
+    ) as client:
 
         response = await client.post(
             f"{settings.AUTH_SERVICE_URL}/auth/login",
+            headers=headers,
             content=body,
-            headers=headers
         )
 
     gateway_response = Response(
         content=response.content,
         status_code=response.status_code,
-        media_type=response.headers.get("content-type")
+        media_type=response.headers.get(
+            "content-type"
+        ),
     )
 
-    for cookie in response.headers.get_list("set-cookie"):
-        gateway_response.headers.append(
-            "set-cookie",
-            cookie
-        )
+    await copy_set_cookie(
+        response,
+        gateway_response,
+    )
 
     return gateway_response
 
 
-@router.post("/logout")
-async def logout(request: Request):
-
-    body = await request.body()
-
-    headers = {
-        "content-type": request.headers.get(
-            "content-type",
-            "application/json"
-        )
-    }
-
-    if request.headers.get("cookie"):
-        headers["cookie"] = request.headers["cookie"]
-
-    async with httpx.AsyncClient() as client:
-
-        response = await client.post(
-            f"{settings.AUTH_SERVICE_URL}/auth/logout",
-            content=body,
-            headers=headers
-        )
-
-    gateway_response = Response(
-        content=response.content,
-        status_code=response.status_code,
-        media_type=response.headers.get("content-type")
-    )
-
-    for cookie in response.headers.get_list("set-cookie"):
-        gateway_response.headers.append(
-            "set-cookie",
-            cookie
-        )
-
-    return gateway_response
+# ============================================================
+# REFRESH
+# ============================================================
 
 @router.post("/refresh")
-async def refresh(request: Request):
+async def refresh(
+    request: Request,
+):
 
     body = await request.body()
 
     headers = {
         "content-type": request.headers.get(
             "content-type",
-            "application/json"
-        )
+            "application/json",
+        ),
     }
 
-    if request.headers.get("cookie"):
-        headers["cookie"] = request.headers["cookie"]
+    # Forward browser cookies
+    cookie = request.headers.get("cookie")
 
-    async with httpx.AsyncClient() as client:
+    if cookie:
+        headers["cookie"] = cookie
+
+    async with httpx.AsyncClient(
+        timeout=30.0
+    ) as client:
 
         response = await client.post(
             f"{settings.AUTH_SERVICE_URL}/auth/refresh",
+            headers=headers,
             content=body,
-            headers=headers
         )
 
     gateway_response = Response(
         content=response.content,
         status_code=response.status_code,
-        media_type=response.headers.get("content-type")
+        media_type=response.headers.get(
+            "content-type"
+        ),
     )
 
-    for cookie in response.headers.get_list("set-cookie"):
-        gateway_response.headers.append(
-            "set-cookie",
-            cookie
-        )
+    # Forward new cookies
+    await copy_set_cookie(
+        response,
+        gateway_response,
+    )
 
     return gateway_response
 
-@router.get("/me")
-async def get_me(request: Request):
 
-    user_id = getattr(request.state, "user_id", None)
-    user_email = getattr(request.state, "user_email", None)
+# ============================================================
+# LOGOUT
+# ============================================================
+
+@router.post("/logout")
+async def logout(
+    request: Request,
+):
+
+    body = await request.body()
+
+    headers = {
+        "content-type": request.headers.get(
+            "content-type",
+            "application/json",
+        ),
+    }
+
+    cookie = request.headers.get("cookie")
+
+    if cookie:
+        headers["cookie"] = cookie
+
+    async with httpx.AsyncClient(
+        timeout=30.0
+    ) as client:
+
+        response = await client.post(
+            f"{settings.AUTH_SERVICE_URL}/auth/logout",
+            headers=headers,
+            content=body,
+        )
+
+    gateway_response = Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type=response.headers.get(
+            "content-type"
+        ),
+    )
+
+    await copy_set_cookie(
+        response,
+        gateway_response,
+    )
+
+    return gateway_response
+
+
+# ============================================================
+# ME
+# ============================================================
+
+@router.get("/me")
+async def get_me(
+    request: Request,
+):
+
+    user_id = getattr(
+        request.state,
+        "user_id",
+        None,
+    )
+
+    user_email = getattr(
+        request.state,
+        "user_email",
+        None,
+    )
 
     headers = {}
-    if user_id is not None:
+
+    if user_id:
         headers["X-User-ID"] = str(user_id)
-    if user_email is not None:
+
+    if user_email:
         headers["X-User-Email"] = str(user_email)
 
-    cookies = {}
-    access_token = request.cookies.get("access_token")
-    if access_token:
-        cookies["access_token"] = str(access_token)
+    cookie = request.headers.get("cookie")
 
-    async with httpx.AsyncClient() as client:
+    if cookie:
+        headers["cookie"] = cookie
+
+    async with httpx.AsyncClient(
+        timeout=30.0
+    ) as client:
 
         response = await client.get(
             f"{settings.AUTH_SERVICE_URL}/auth/me",
             headers=headers,
-            cookies=cookies
         )
 
-    return response.json()
+    return Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type=response.headers.get(
+            "content-type"
+        ),
+    )

@@ -2,8 +2,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.core.config import settings
-from app.core.security import decode_token, create_access_token
+from app.core.security import decode_token
 
 
 PUBLIC_PATHS = {
@@ -11,80 +10,109 @@ PUBLIC_PATHS = {
     "/health",
     "/docs",
     "/openapi.json",
+
+    # Authentication
     "/api/auth/login",
     "/api/auth/logout",
     "/api/auth/refresh",
 }
 
 
-class AuthMiddleware(
-    BaseHTTPMiddleware
-):
+class AuthMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(
         self,
         request: Request,
-        call_next
+        call_next,
     ):
 
         path = request.url.path
 
-        if request.method == "OPTIONS" or path in PUBLIC_PATHS:
+        # ----------------------------------------------------
+        # Public routes
+        # ----------------------------------------------------
 
-            return await call_next(
-                request
-            )
+        if (
+            request.method == "OPTIONS"
+            or path in PUBLIC_PATHS
+        ):
+            return await call_next(request)
 
-        access_token = request.cookies.get("access_token")
-        refresh_token = request.cookies.get("refresh_token")
+        # ----------------------------------------------------
+        # Get access token
+        # ----------------------------------------------------
 
-        user_id = None
-        email = None
-        new_access_token = None
+        access_token = request.cookies.get(
+            "access_token"
+        )
 
-        if access_token:
-            try:
-                payload = decode_token(access_token)
-                if payload.get("type") == "access":
-                    user_id = payload.get("sub")
-            except ValueError:
-                pass
-
-        if not user_id and refresh_token:
-            try:
-                ref_payload = decode_token(refresh_token)
-                if ref_payload.get("type") == "refresh":
-                    user_id = ref_payload.get("sub")
-                    email = ref_payload.get("email")
-                    if user_id and email:
-                        new_access_token = create_access_token(user_id, email)
-            except ValueError:
-                pass
-
-        if not user_id:
+        if not access_token:
             return JSONResponse(
                 status_code=401,
                 content={
                     "detail": "Authentication required"
-                }
+                },
             )
+
+        # ----------------------------------------------------
+        # Decode access token
+        # ----------------------------------------------------
+
+        try:
+
+            payload = decode_token(
+                access_token
+            )
+
+        except Exception:
+
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "detail": "Invalid or expired access token"
+                },
+            )
+
+        # ----------------------------------------------------
+        # Validate token type
+        # ----------------------------------------------------
+
+        if payload.get("type") != "access":
+
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "detail": "Invalid access token"
+                },
+            )
+
+        # ----------------------------------------------------
+        # Get user
+        # ----------------------------------------------------
+
+        user_id = payload.get("sub")
+        user_email = payload.get("email")
+
+        if not user_id:
+
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "detail": "Invalid access token"
+                },
+            )
+
+        # ----------------------------------------------------
+        # Store user information
+        # ----------------------------------------------------
 
         request.state.user_id = user_id
-        request.state.user_email = email
+        request.state.user_email = user_email
 
-        response = await call_next(
-            request
-        )
+        # ----------------------------------------------------
+        # Continue request
+        # ----------------------------------------------------
 
-        if new_access_token:
-            response.set_cookie(
-                key="access_token",
-                value=new_access_token,
-                httponly=True,
-                secure=settings.COOKIE_SECURE,
-                samesite=settings.COOKIE_SAMESITE,
-                max_age=15 * 60,
-                path="/"
-            )
+        response = await call_next(request)
 
         return response
