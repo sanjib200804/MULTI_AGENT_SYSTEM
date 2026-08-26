@@ -6,8 +6,9 @@ COPY services/agent/requirements.txt ./requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY backend/shared ./shared
-COPY backend/services/agent/app ./app
+COPY shared ./shared
+
+COPY services/agent/app ./app
 
 EXPOSE 8003
 
