@@ -81,7 +81,7 @@ class AuthMiddleware(
                 value=new_access_token,
                 httponly=True,
                 secure=settings.COOKIE_SECURE,
-                samesite="lax",
+                samesite=settings.COOKIE_SAMESITE,
                 max_age=15 * 60,
                 path="/"
             )

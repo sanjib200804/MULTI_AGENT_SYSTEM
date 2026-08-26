@@ -30,7 +30,7 @@ async def login(
         value=result["access_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,          
-        samesite="lax",
+        samesite=settings.COOKIE_SAMESITE,
         max_age=15 * 60,
         path="/"
     )
@@ -40,7 +40,7 @@ async def login(
         value=result["refresh_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,         
-        samesite="lax",
+        samesite=settings.COOKIE_SAMESITE,
         max_age=7 * 24 * 60 * 60,
         path="/"
     )
@@ -70,12 +70,18 @@ async def logout(
 
     response.delete_cookie(
         key="access_token",
-        path="/"
+        path="/",
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        httponly=True
     )
 
     response.delete_cookie(
         key="refresh_token",
-        path="/"
+        path="/",
+        secure=settings.COOKIE_SECURE,
+        samesite=settings.COOKIE_SAMESITE,
+        httponly=True
     )
 
     return {
@@ -108,7 +114,7 @@ async def refresh_token(
         value=result["access_token"],
         httponly=True,
         secure=settings.COOKIE_SECURE,
-        samesite="lax",
+        samesite=settings.COOKIE_SAMESITE,
         max_age=15 * 60,
         path="/"
     )

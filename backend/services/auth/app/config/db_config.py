@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int 
     FIREBASE_PROJECT_ID: str = "multiagentai-e8c08"
     COOKIE_SECURE: bool = False
+    COOKIE_SAMESITE: str = "lax"
 
     model_config = SettingsConfigDict(
         env_file=".env",

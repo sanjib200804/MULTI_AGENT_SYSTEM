@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY :str
     CORS_ORIGINS: str = "https://agentra-ai.onrender.com,http://localhost:5173,http://localhost:5174,http://localhost:3000"
     COOKIE_SECURE: bool = False
+    COOKIE_SAMESITE: str = "lax"
 
 settings = Settings()
 
