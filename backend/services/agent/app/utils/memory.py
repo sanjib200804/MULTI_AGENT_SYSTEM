@@ -1,4 +1,4 @@
-from shared.redis.redis import redis_client
+from shared.redis.rediss import redis_client
 from utils.get_messages import get_messages
 import json
 async def get_Memory(conversationId:str):
