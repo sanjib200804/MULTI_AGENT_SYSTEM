@@ -13,6 +13,7 @@ PUBLIC_PATHS = {
     "/openapi.json",
     "/api/auth/login",
     "/api/auth/logout",
+    "/api/auth/refresh",
 }
 
 

@@ -82,6 +82,43 @@ async def logout(request: Request):
 
     return gateway_response
 
+@router.post("/refresh")
+async def refresh(request: Request):
+
+    body = await request.body()
+
+    headers = {
+        "content-type": request.headers.get(
+            "content-type",
+            "application/json"
+        )
+    }
+
+    if request.headers.get("cookie"):
+        headers["cookie"] = request.headers["cookie"]
+
+    async with httpx.AsyncClient() as client:
+
+        response = await client.post(
+            f"{settings.AUTH_SERVICE_URL}/auth/refresh",
+            content=body,
+            headers=headers
+        )
+
+    gateway_response = Response(
+        content=response.content,
+        status_code=response.status_code,
+        media_type=response.headers.get("content-type")
+    )
+
+    for cookie in response.headers.get_list("set-cookie"):
+        gateway_response.headers.append(
+            "set-cookie",
+            cookie
+        )
+
+    return gateway_response
+
 @router.get("/me")
 async def get_me(request: Request):
 
