@@ -67,20 +67,18 @@ async def save_message(
         message = message_repo.create(
             conversation_id=data.conversationId,
             role=data.role,
-            content=data.content
+            content=data.content,
+            images=data.images,
+            artifacts=data.artifacts
         )
         return MessageResponse.model_validate(message)
     except Exception as e:
+        print(f"Save Message DB Error: {e}")
         raise HTTPException(
             status_code=400,
             detail=str(e)
         )
 
-
-
-# =====================================================
-# CONVERSATION
-# =====================================================
 
 
 @router.post(
@@ -232,11 +230,6 @@ async def delete_conversation(
             status_code=403,
             detail=str(e)
         )
-
-
-# =====================================================
-# MESSAGE
-# =====================================================
 
 
 @router.post(

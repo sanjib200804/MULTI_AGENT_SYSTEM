@@ -10,28 +10,23 @@ from utils.upload_to_s3 import upload_to_s3
 from utils.get_from_s3 import get_from_s3
 
 
+def extract_json_string(text: str) -> str:
+    start = text.find('{')
+    end = text.rfind('}')
+    if start != -1 and end != -1 and end > start:
+        return text[start:end + 1]
+    return text
+
+
 async def pdf_agent(state: AgentState):
 
     try:
-
-        # -----------------------------
-        # CHECK AGENT LIMIT
-        # -----------------------------
-
         await check_agent_limit(
             state["user_id"],
             "pdf"
         )
 
-        # -----------------------------
-        # GET MODEL
-        # -----------------------------
-
         llm = await get_llm_model("pdf")
-
-        # -----------------------------
-        # PROMPT
-        # -----------------------------
 
         prompt = f"""
 You are an expert document writer.
@@ -66,41 +61,23 @@ Topic:
 {state["prompt"]}
 """
 
-        # -----------------------------
-        # CALL LLM
-        # -----------------------------
-
         response = await llm.ainvoke(prompt)
+        raw_content = response.content if isinstance(response.content, str) else str(response.content)
+        json_str = extract_json_string(raw_content)
 
-        content = response.content.strip()
+        data = json.loads(json_str)
 
-        # -----------------------------
-        # PARSE JSON
-        # -----------------------------
-
-        data = json.loads(content)
-
-        # -----------------------------
-        # GENERATE PDF
-        # -----------------------------
+        if not data.get("title"):
+            data["title"] = state.get("prompt", "Document")
 
         pdf_buffer = generate_pdf(data)
 
-        # If generate_pdf returns BytesIO
         if hasattr(pdf_buffer, "getvalue"):
             pdf_bytes = pdf_buffer.getvalue()
         else:
             pdf_bytes = pdf_buffer
 
-        # -----------------------------
-        # FILE NAME
-        # -----------------------------
-
         filename = f"pdf-{int(time.time() * 1000)}.pdf"
-
-        # -----------------------------
-        # UPLOAD TO S3
-        # -----------------------------
 
         await upload_to_s3(
             filename,
@@ -108,27 +85,15 @@ Topic:
             "application/pdf"
         )
 
-        # -----------------------------
-        # PRESIGNED URL
-        # -----------------------------
-
         download_url = await get_from_s3(
             filename,
             600
         )
 
-        # -----------------------------
-        # DEDUCT CREDITS
-        # -----------------------------
-
         await deduct_credits(
             state["user_id"],
             "pdf"
         )
-
-        # -----------------------------
-        # RETURN
-        # -----------------------------
 
         return {
             **state,

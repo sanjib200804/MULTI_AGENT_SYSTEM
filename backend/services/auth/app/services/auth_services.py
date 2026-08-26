@@ -105,20 +105,16 @@ class AuthServices:
         }
     async def logout(self, refresh_token: str):
 
-     # Decode refresh token and get user ID
      try:
          payload = decode_token(refresh_token)
 
          user_id = (payload.get("sub"))
 
      except Exception:
-         # Even if token is invalid/expired,
-         # logout should still succeed.
          return {
             "message": "Logout successful"
         }
 
-     # Remove refresh token from Redis
      await self.session_repository.delete_refresh_token(
         user_id
     )

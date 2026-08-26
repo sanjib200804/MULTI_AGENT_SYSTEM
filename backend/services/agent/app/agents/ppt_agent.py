@@ -11,28 +11,23 @@ from utils.upload_to_s3 import upload_to_s3
 from utils.get_from_s3 import get_from_s3
 
 
+def extract_json_string(text: str) -> str:
+    start = text.find('{')
+    end = text.rfind('}')
+    if start != -1 and end != -1 and end > start:
+        return text[start:end + 1]
+    return text
+
+
 async def ppt_agent(state: AgentState):
 
     try:
-
-        # --------------------------------
-        # CHECK LIMIT
-        # --------------------------------
-
         await check_agent_limit(
             state["user_id"],
             "ppt"
         )
 
-        # --------------------------------
-        # GET MODEL
-        # --------------------------------
-
         llm = await get_llm_model("ppt")
-
-        # --------------------------------
-        # GENERATE PPT CONTENT
-        # --------------------------------
 
         prompt = f"""
 You are a professional presentation designer.
@@ -71,51 +66,21 @@ Topic:
 {state["prompt"]}
 """
 
-        # IMPORTANT: async model call
         response = await llm.ainvoke(prompt)
+        raw_content = response.content if isinstance(response.content, str) else str(response.content)
+        json_str = extract_json_string(raw_content)
 
-        # --------------------------------
-        # PARSE JSON
-        # --------------------------------
-
-        content = response.content.strip()
-
-        # Remove accidental markdown fences
-        if content.startswith("```"):
-            content = content.replace("```json", "")
-            content = content.replace("```", "")
-            content = content.strip()
-
-        data = json.loads(content)
-
-        # --------------------------------
-        # VALIDATE BASIC STRUCTURE
-        # --------------------------------
+        data = json.loads(json_str)
 
         if not data.get("title"):
-            raise ValueError("PPT title is missing")
+            data["title"] = state.get("prompt", "Presentation")
 
         if not data.get("slides"):
             raise ValueError("PPT slides are missing")
 
-        if len(data["slides"]) != 6:
-            raise ValueError("PPT must contain exactly 6 content slides")
-
-        # --------------------------------
-        # GENERATE PPTX
-        # --------------------------------
-
         ppt_buffer = await generate_ppt(data)
 
-        # --------------------------------
-        # FILE NAME
-        # --------------------------------
-
         filename = f"ppt-{uuid.uuid4()}.pptx"
-
-        # --------------------------------
-        # UPLOAD TO S3
-        # --------------------------------
 
         content_type = (
             "application/vnd.openxmlformats-officedocument."
@@ -128,27 +93,15 @@ Topic:
             content_type=content_type
         )
 
-        # --------------------------------
-        # DOWNLOAD URL
-        # --------------------------------
-
         download_url = await get_from_s3(
             filename,
             24 * 60 * 60
         )
 
-        # --------------------------------
-        # DEDUCT CREDIT
-        # --------------------------------
-
         await deduct_credits(
             state["user_id"],
             "ppt"
         )
-
-        # --------------------------------
-        # RETURN STATE
-        # --------------------------------
 
         return {
             **state,

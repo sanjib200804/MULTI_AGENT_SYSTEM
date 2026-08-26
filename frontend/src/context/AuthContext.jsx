@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isPricingModalOpen, setIsPricingModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const refetchUser = async () => {
@@ -57,17 +58,13 @@ export function AuthProvider({ children }) {
         firebase_id: firebaseUser.uid,
       });
 
-      // 4. Update local user state with backend response (cookies are automatically set)
-      setUser(response.data);
+      setUser(response.data.user || response.data);
       setIsAuthModalOpen(false);
+      setIsPricingModalOpen(false);
       navigate("/dashboard");
     } catch (error) {
-      console.error("Sign-In Error:", error);
-      if (error.code === "auth/popup-closed-by-user") {
-        setAuthError("Google sign-in was cancelled.");
-      } else {
-        setAuthError("Unable to sign in with Google. Please try again.");
-      }
+      console.error("Google Login Error:", error);
+      setAuthError("Google Sign-In failed. Please try again.");
     } finally {
       setAuthLoading(false);
     }
@@ -76,11 +73,9 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await api.post("/api/auth/logout");
-      setUser(null);
-      navigate("/");
-    } catch (error) {
-      console.error("Logout Error:", error);
-      // Fallback: clear user state anyway
+    } catch (err) {
+      console.error("Logout API error:", err);
+    } finally {
       setUser(null);
       navigate("/");
     }
@@ -96,6 +91,8 @@ export function AuthProvider({ children }) {
         setAuthError,
         isAuthModalOpen,
         setIsAuthModalOpen,
+        isPricingModalOpen,
+        setIsPricingModalOpen,
         loginWithGoogle,
         logout,
         refetchUser,
@@ -106,7 +103,6 @@ export function AuthProvider({ children }) {
   );
 }
 
-// Support both naming styles requested by the user
 export { AuthProvider as AuthContextProvider };
 
 export function useAuth() {

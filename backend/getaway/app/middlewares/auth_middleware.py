@@ -2,6 +2,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from app.core.config import settings
 from app.core.security import decode_token, create_access_token
 
 
@@ -27,14 +28,12 @@ class AuthMiddleware(
 
         path = request.url.path
 
-        # Public endpoints and CORS preflight OPTIONS requests
         if request.method == "OPTIONS" or path in PUBLIC_PATHS:
 
             return await call_next(
                 request
             )
 
-        # Get tokens from cookies
         access_token = request.cookies.get("access_token")
         refresh_token = request.cookies.get("refresh_token")
 
@@ -42,17 +41,14 @@ class AuthMiddleware(
         email = None
         new_access_token = None
 
-        # 1. Attempt to validate access_token
         if access_token:
             try:
                 payload = decode_token(access_token)
                 if payload.get("type") == "access":
                     user_id = payload.get("sub")
-                    email = payload.get("email")
             except ValueError:
-                pass  # Token expired or invalid, fall through to refresh_token check
+                pass
 
-        # 2. Fallback to refresh_token if access_token is missing/expired
         if not user_id and refresh_token:
             try:
                 ref_payload = decode_token(refresh_token)
@@ -72,22 +68,19 @@ class AuthMiddleware(
                 }
             )
 
-        # Store user information
         request.state.user_id = user_id
         request.state.user_email = email
 
-        # Continue request
         response = await call_next(
             request
         )
 
-        # If a new access_token was generated from refresh_token, set cookie on response
         if new_access_token:
             response.set_cookie(
                 key="access_token",
                 value=new_access_token,
                 httponly=True,
-                secure=False,
+                secure=settings.COOKIE_SECURE,
                 samesite="lax",
                 max_age=15 * 60,
                 path="/"

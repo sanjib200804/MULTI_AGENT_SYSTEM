@@ -36,10 +36,6 @@ async def agent(
     file_dict = None
     try:
 
-        # -----------------------------
-        # SAVE USER MESSAGE
-        # -----------------------------
-
         async with httpx.AsyncClient() as client:
 
             response = await client.post(
@@ -53,14 +49,9 @@ async def agent(
 
             response.raise_for_status()
 
-        # -----------------------------
-        # FILE PREPROCESSING
-        # -----------------------------
-
         if file is not None:
             import os
             import uuid
-            # Create a temp directory inside the agent service directory
             temp_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "temp")
             os.makedirs(temp_dir, exist_ok=True)
 
@@ -77,10 +68,6 @@ async def agent(
                 "content_type": file.content_type
             }
 
-        # -----------------------------
-        # RUN LANGGRAPH
-        # -----------------------------
-
         result = await graph.ainvoke({
             "prompt": prompt,
             "conversation_id": conversation_id,
@@ -91,12 +78,7 @@ async def agent(
 
         print("result:", result)
 
-        # Normalize ai_response to a plain string (handles Claude content blocks)
         ai_text = _extract_text(result.get("ai_response", ""))
-
-        # -----------------------------
-        # MEMORY
-        # -----------------------------
 
         await add_message(
             conversation_id,
@@ -109,10 +91,6 @@ async def agent(
             "assistant",
             ai_text
         )
-
-        # -----------------------------
-        # SAVE ASSISTANT MESSAGE
-        # -----------------------------
 
         async with httpx.AsyncClient() as client:
 
@@ -128,10 +106,6 @@ async def agent(
             )
 
             response.raise_for_status()
-
-        # -----------------------------
-        # RESPONSE
-        # -----------------------------
 
         return {
             "answer": ai_text,

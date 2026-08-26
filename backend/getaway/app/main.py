@@ -13,23 +13,18 @@ app.add_middleware(
     AuthMiddleware
 )
 
+origins = [o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()] if settings.CORS_ORIGINS != "*" else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5174","http://localhost:5173"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-if __name__ == '__main__':
-    uvicorn.run(
-        'app.main:app',
-        host = '0.0.0.0',
-        port = settings.PORT,
-        reload = True
-    )    
+
 @app.get("/health")
 async def health():
-
     return {
         "service": "gateway",
         "status": "healthy"
@@ -38,3 +33,11 @@ async def health():
 app.include_router(auth_router)
 app.include_router(chat_router)
 app.include_router(agent_router)
+
+if __name__ == '__main__':
+    uvicorn.run(
+        'app.main:app',
+        host='0.0.0.0',
+        port=settings.PORT,
+        reload=True
+    )

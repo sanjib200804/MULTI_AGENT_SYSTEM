@@ -22,14 +22,12 @@ embedding = MistralAIEmbeddings(
 
 def build_retriever(path: str):
 
-    # 1. Load PDF
     loader = PyPDFLoader(path)
     docs = loader.load()
 
     if not docs:
         raise ValueError("PDF contains no readable text")
 
-    # 2. Split text
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
         chunk_overlap=200,
@@ -50,13 +48,11 @@ def build_retriever(path: str):
     print(f"Pages: {len(docs)}")
     print(f"Chunks: {len(chunks)}")
 
-    # 3. Create FAISS vector store
     vector_storage = FAISS.from_documents(
         documents=chunks,
         embedding=embedding
     )
 
-    # 4. Create retriever
     retriever = vector_storage.as_retriever(
         search_kwargs={
             "k": 4

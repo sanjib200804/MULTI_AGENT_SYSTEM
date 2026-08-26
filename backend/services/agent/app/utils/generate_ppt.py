@@ -3,24 +3,8 @@ from pptx import Presentation
 
 
 async def generate_ppt(data: dict) -> bytes:
-    """
-    Generates a PowerPoint presentation (.pptx) from JSON data.
-    Expected data structure:
-    {
-        "title": "Main Title",
-        "subtitle": "Main Subtitle",
-        "slides": [
-            {
-                "title": "Slide Title",
-                "points": ["Point 1", "Point 2", ...]
-            },
-            ...
-        ]
-    }
-    """
     prs = Presentation()
 
-    # Title Slide
     title_slide_layout = prs.slide_layouts[0]
     slide = prs.slides.add_slide(title_slide_layout)
     title = slide.shapes.title
@@ -30,7 +14,6 @@ async def generate_ppt(data: dict) -> bytes:
     if data.get("subtitle"):
         subtitle.text = data.get("subtitle", "")
 
-    # Bullet Points Slides
     bullet_slide_layout = prs.slide_layouts[1]
     for slide_data in data.get("slides", []):
         slide = prs.slides.add_slide(bullet_slide_layout)
@@ -49,7 +32,6 @@ async def generate_ppt(data: dict) -> bytes:
                 p.text = point
                 p.level = 0
 
-    # Save presentation to BytesIO
     ppt_buffer = io.BytesIO()
     prs.save(ppt_buffer)
     ppt_buffer.seek(0)

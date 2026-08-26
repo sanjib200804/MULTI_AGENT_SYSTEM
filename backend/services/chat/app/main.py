@@ -3,12 +3,23 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
 
 from fastapi import FastAPI
+from sqlalchemy import text
 from app.routes.chat_router import router as chat_router
 from app.database.database import Base, engine
 from app.models.conversation_model import ConversationModel
 from app.models.message_model import MessageModel
 
 Base.metadata.create_all(bind=engine)
+
+# Auto-migrate: ensure images and artifacts columns exist in message table
+try:
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE message ADD COLUMN IF NOT EXISTS images JSON DEFAULT '[]'::json;"))
+        conn.execute(text("ALTER TABLE message ADD COLUMN IF NOT EXISTS artifacts JSON DEFAULT '[]'::json;"))
+        conn.commit()
+        print("Chat service DB migration complete: images and artifacts columns verified.")
+except Exception as migration_error:
+    print(f"Chat service DB migration warning: {migration_error}")
 
 app = FastAPI(title='chat service..')
 
@@ -21,6 +32,3 @@ async def health_check():
         "status": "healthy",
         "service": "chat-service"
     }
-
-
-# uvicorn app.main:app --reload --port 8002 

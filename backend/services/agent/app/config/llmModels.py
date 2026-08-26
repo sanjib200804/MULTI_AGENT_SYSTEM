@@ -5,27 +5,26 @@ from langchain_groq import ChatGroq
 from langchain_mistralai import ChatMistralAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
-groq= ChatGroq(
-    model="openai/gpt-oss-120b"
+groq = ChatGroq(
+    model="openai/gpt-oss-120b",
+    max_tokens=8192
 )
 
 gemini = ChatGoogleGenerativeAI(
-    model ="gemini-3.6-flash"
+    model="gemini-3.6-flash",
+    max_output_tokens=8192
 )
 
 mistral = ChatMistralAI(
-    model='mistral-small-2506'
-
+    model="mistral-small-2506"
 )
 
-async def get_llm_model(agent : str):
+async def get_llm_model(agent: str):
     if 'chat' in agent:
         return mistral
     elif 'search' in agent:
-        return groq
-    elif 'coding' in agent:
+        return gemini
+    elif 'coding' in agent or 'website' in agent:
         return gemini
     else:
-        return groq
-
-
+        return gemini

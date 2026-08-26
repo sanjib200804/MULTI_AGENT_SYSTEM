@@ -53,7 +53,10 @@ def router(state):
         case "imageAnalyzer":
             return "imageAnalyzer"
 
-        case "vision":
+        case "vision" | "image":
+            file = state.get("file")
+            if file and file.get("content_type", "").startswith("image/"):
+                return "imageAnalyzer"
             return "vision"
 
         case _:
@@ -83,4 +86,3 @@ workflow.add_edge('imageAnalyzer',END)
 
 
 graph = workflow.compile()
-

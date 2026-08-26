@@ -11,28 +11,32 @@ from utils.upload_to_s3 import upload_to_s3
 from utils.get_from_s3 import get_from_s3
 
 
+def extract_text(content) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict) and "text" in part:
+                text_parts.append(str(part["text"]))
+            elif hasattr(part, "text"):
+                text_parts.append(str(getattr(part, "text", "")))
+        return "".join(text_parts)
+    return str(content)
+
+
 async def vision_agent(state: AgentState):
 
     try:
-
-        # ---------------------------------
-        # CHECK AGENT LIMIT
-        # ---------------------------------
 
         await check_agent_limit(
             state["user_id"],
             "image"
         )
 
-        # ---------------------------------
-        # GET LLM
-        # ---------------------------------
-
         llm = await get_llm_model("image")
-
-        # ---------------------------------
-        # GENERATE IMAGE PROMPT
-        # ---------------------------------
 
         response = await llm.ainvoke(
             f"""
@@ -41,7 +45,6 @@ You are an elite AI image prompt engineer.
 Convert the user request into a highly detailed image generation prompt.
 
 Requirements:
-
 - Cinematic lighting
 - Professional composition
 - Ultra realistic
@@ -61,20 +64,12 @@ User Request:
 """
         )
 
-        prompt = response.content.strip()
-
-        # ---------------------------------
-        # POLLINATIONS IMAGE URL
-        # ---------------------------------
+        prompt = extract_text(response.content).strip()
 
         image_url = (
             "https://image.pollinations.ai/prompt/"
             + quote(prompt)
         )
-
-        # ---------------------------------
-        # DOWNLOAD IMAGE
-        # ---------------------------------
 
         async with httpx.AsyncClient(
             timeout=120
@@ -88,24 +83,12 @@ User Request:
 
             image_bytes = image_response.content
 
-        # ---------------------------------
-        # DEDUCT CREDITS
-        # ---------------------------------
-
         await deduct_credits(
             state["user_id"],
             "vision"
         )
 
-        # ---------------------------------
-        # FILE NAME
-        # ---------------------------------
-
         filename = f"image-{int(time.time() * 1000)}.png"
-
-        # ---------------------------------
-        # UPLOAD TO S3
-        # ---------------------------------
 
         await upload_to_s3(
             filename=filename,
@@ -113,27 +96,20 @@ User Request:
             content_type="image/png"
         )
 
-        # ---------------------------------
-        # PRESIGNED URL
-        # ---------------------------------
-
         download_url = await get_from_s3(
             filename,
             24 * 60
         )
 
-        # ---------------------------------
-        # RETURN STATE
-        # ---------------------------------
-
         return {
             **state,
+            "images": [download_url],
             "ai_response": f"""
 ![Generated Image]({download_url})
 
 📥 [Download Image]({download_url})
 
-⏳ Link expires in 10 minutes.
+_Link expires in 24 hours._
 """
         }
 
@@ -143,5 +119,6 @@ User Request:
 
         return {
             **state,
-            "ai_response": "Failed to generate image"
+            "ai_response": "Failed to generate image",
+            "artifacts": []
         }

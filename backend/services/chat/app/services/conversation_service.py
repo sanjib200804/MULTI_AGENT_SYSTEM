@@ -20,8 +20,6 @@ class ConversationService:
         )
 
 
-    # Create Conversation
-
     def create_conversation(
         self,
         user_id: UUID,
@@ -45,8 +43,6 @@ class ConversationService:
             conversation
         )
 
-
-    # Get Conversation
 
     def get_conversation(
         self,
@@ -76,8 +72,6 @@ class ConversationService:
         )
 
 
-    # Get User Conversations
-
     def get_user_conversation(
         self,
         user_id: UUID
@@ -98,8 +92,6 @@ class ConversationService:
         ]
 
 
-    # Update Title
-
     def update_title(
         self,
         conversation_id: UUID,
@@ -107,7 +99,6 @@ class ConversationService:
         title: str
     ) -> ConversationResponse:
 
-        # Check ownership
         self.get_conversation(
             conversation_id=conversation_id,
             user_id=user_id
@@ -136,15 +127,12 @@ class ConversationService:
         )
 
 
-    # Delete Conversation
-
     def delete_conversation(
         self,
         conversation_id: UUID,
         user_id: UUID
     ) -> bool:
 
-        # Check ownership
         self.get_conversation(
             conversation_id=conversation_id,
             user_id=user_id

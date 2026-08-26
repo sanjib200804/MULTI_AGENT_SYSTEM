@@ -8,7 +8,9 @@ from sqlalchemy import (
     Text,
     Integer,
     DateTime,
-    ForeignKey,Enum as SQLEnum
+    ForeignKey,
+    JSON,
+    Enum as SQLEnum
 )
 
 from sqlalchemy.dialects.postgresql import UUID
@@ -29,7 +31,7 @@ class MessageModel(Base):
         default=uuid.uuid4,
         unique=True,
         index=True
-        )
+    )
 
     conversation_id = Column(
         UUID(as_uuid=True),
@@ -41,9 +43,9 @@ class MessageModel(Base):
         index=True
     )
 
-    role = Column(SQLEnum(MessageRole),nullable=False,index=True)
+    role = Column(SQLEnum(MessageRole), nullable=False, index=True)
 
-    content = Column(Text , nullable=False)
+    content = Column(Text, nullable=False)
 
     agent_name = Column(String(255), nullable=True)
 
@@ -53,13 +55,16 @@ class MessageModel(Base):
 
     token_usage = Column(Integer, nullable=True)
 
+    images = Column(JSON, nullable=True, default=list)
+
+    artifacts = Column(JSON, nullable=True, default=list)
+
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
         default=lambda: datetime.now(timezone.utc),
         index=True
     )
-
 
     conversation = relationship(
         "ConversationModel",

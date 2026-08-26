@@ -17,18 +17,10 @@ async def pdf_rag(state: AgentState):
 
     try:
 
-        # -----------------------------
-        # CHECK AGENT LIMIT
-        # -----------------------------
-
         await check_agent_limit(
             state["user_id"],
             "pdf"
         )
-
-        # -----------------------------
-        # PDF PATH
-        # -----------------------------
 
         file = state.get("file")
 
@@ -40,17 +32,9 @@ async def pdf_rag(state: AgentState):
 
         file_path = file["path"]
 
-        # -----------------------------
-        # LOAD PDF
-        # -----------------------------
-
         loader = PyPDFLoader(file_path)
 
         docs = await loader.aload()
-
-        # -----------------------------
-        # TEXT SPLITTER
-        # -----------------------------
 
         splitter = RecursiveCharacterTextSplitter(
             chunk_size=1000,
@@ -59,48 +43,24 @@ async def pdf_rag(state: AgentState):
 
         chunks = splitter.split_documents(docs)
 
-        # -----------------------------
-        # COLLECTION NAME
-        # -----------------------------
-
         collection_name = f"pdf-{uuid.uuid4()}"
-
-        # -----------------------------
-        # CREATE VECTOR STORE
-        # -----------------------------
 
         store = await vector_store(
             chunks,
             collection_name
         )
 
-        # -----------------------------
-        # SIMILARITY SEARCH
-        # -----------------------------
-
         relevant_docs = await store.asimilarity_search(
             state["prompt"],
             k=5
         )
-
-        # -----------------------------
-        # CREATE CONTEXT
-        # -----------------------------
 
         context = "\n\n".join(
             doc.page_content
             for doc in relevant_docs
         )
 
-        # -----------------------------
-        # GET LLM
-        # -----------------------------
-
         llm = await get_llm_model("pdf-rag")
-
-        # -----------------------------
-        # MESSAGES
-        # -----------------------------
 
         messages = [
 
@@ -133,24 +93,12 @@ Question:
             )
         ]
 
-        # -----------------------------
-        # LLM
-        # -----------------------------
-
         response = await llm.ainvoke(messages)
-
-        # -----------------------------
-        # DEDUCT CREDITS
-        # -----------------------------
 
         await deduct_credits(
             state["user_id"],
             "pdf"
         )
-
-        # -----------------------------
-        # RETURN
-        # -----------------------------
 
         return {
             **state,
@@ -167,10 +115,6 @@ Question:
         }
 
     finally:
-
-        # -----------------------------
-        # DELETE LOCAL PDF
-        # -----------------------------
 
         try:
 

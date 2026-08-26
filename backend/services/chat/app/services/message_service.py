@@ -22,10 +22,6 @@ class MessageService:
             db=db
         )
 
-    # =========================
-    # Save Message
-    # =========================
-
     def save_msg(
         self,
         conversation_id: UUID,
@@ -46,13 +42,11 @@ class MessageService:
                 "Conversation not found!"
             )
 
-        # Check ownership
         if conversation.user_id != user_id:
             raise PermissionError(
                 "You don't have access to this conversation!"
             )
 
-        # Validate message
         if not content or not content.strip():
             raise ValueError(
                 "Message content cannot be empty!"
@@ -69,10 +63,6 @@ class MessageService:
         return MessageResponse.model_validate(
             message
         )
-
-    # =========================
-    # Get Single Message
-    # =========================
 
     def get_message(
         self,
@@ -102,7 +92,6 @@ class MessageService:
                 "Conversation not found"
             )
 
-        # Check ownership
         if conversation.user_id != user_id:
             raise PermissionError(
                 "You don't have access to this message"
@@ -111,10 +100,6 @@ class MessageService:
         return MessageResponse.model_validate(
             message
         )
-
-    # =========================
-    # Get All Messages
-    # =========================
 
     def get_messages(
         self,
@@ -134,7 +119,6 @@ class MessageService:
                 "Conversation not found"
             )
 
-        # Check ownership
         if conversation.user_id != user_id:
             raise PermissionError(
                 "You don't have access to this conversation"
@@ -152,17 +136,12 @@ class MessageService:
             for message in messages
         ]
 
-    # =========================
-    # Delete Message
-    # =========================
-
     def delete_message(
         self,
         message_id: UUID,
         user_id: UUID
     ) -> bool:
 
-        # Check ownership
         self.get_message(
             message_id=message_id,
             user_id=user_id

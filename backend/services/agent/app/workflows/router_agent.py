@@ -1,9 +1,25 @@
-
 from config.llmModels import get_llm_model
 
 async def router_agent(state):
     agent_val = state.get('agent')
     if agent_val and agent_val != 'auto':
+        file = state.get('file')
+        content_type = file.get('content_type', '') if file else ''
+
+        if agent_val == 'image':
+            if content_type.startswith('image/'):
+                target = 'imageAnalyzer'
+            else:
+                target = 'vision'
+            return {**state, 'agent': target}
+
+        if agent_val in ('pdfRag', 'pdf'):
+            if content_type == 'application/pdf':
+                target = 'pdfRag'
+            else:
+                target = 'pdf'
+            return {**state, 'agent': target}
+
         return {
             **state,
             'agent': agent_val
@@ -36,6 +52,7 @@ Available agents:
 - pdf
 - ppt
 - vision
+- website
 
 Rules:
 
@@ -72,6 +89,11 @@ vision:
 Generate images,
 create images.
 
+website:
+Build websites,
+generate landing pages,
+HTML/CSS components.
+
 Return ONLY one word:
 
 chat
@@ -80,6 +102,7 @@ coding
 pdf
 ppt
 vision
+website
 
 User Query:
 {state.get('prompt')}
@@ -93,7 +116,8 @@ User Query:
         "coding",
         "pdf",
         "ppt",
-        "vision"
+        "vision",
+        "website"
     }
 
     if agent not in valid_agents:
@@ -102,5 +126,4 @@ User Query:
     return {
         **state,
         "agent": agent
-    }   
-
+    }

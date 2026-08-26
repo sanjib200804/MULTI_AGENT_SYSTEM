@@ -1,7 +1,6 @@
 import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, Paperclip, X, Sparkles, CornerDownLeft } from "lucide-react";
-import { agentsList, agentInfo } from "../../data/agentsData";
+import { Send, Paperclip, X, CornerDownLeft } from "lucide-react";
+import { agentsList } from "../../data/agentsData";
 
 export default function ChatInputDock({
   inputMessage,
@@ -18,37 +17,30 @@ export default function ChatInputDock({
   fileInputRef,
   textareaRef,
 }) {
+  const currentAgentName = agentsList.find((a) => a.id === selectedAgent)?.name || "Auto";
+
   return (
-    <div className="absolute bottom-0 left-0 right-0 pb-4 px-4 bg-gradient-to-t from-slate-50 via-slate-50/95 dark:from-[#030712] dark:via-[#030712]/95 to-transparent pt-10 pointer-events-none">
+    <div className="absolute bottom-0 left-0 right-0 pb-3 px-4 bg-gradient-to-t from-slate-50 via-slate-50/95 dark:from-[#09090b] dark:via-[#09090b]/95 to-transparent pt-6 pointer-events-none">
       <div className="max-w-3xl mx-auto pointer-events-auto">
         
-        {/* File Attachment Preview Badge */}
-        <AnimatePresence>
-          {selectedFile && (
-            <motion.div
-              initial={{ opacity: 0, y: 8, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="mb-2.5 inline-flex items-center gap-2 rounded-xl border border-purple-400/40 dark:border-purple-500/30 bg-purple-500/10 px-3.5 py-1.5 text-xs text-purple-700 dark:text-purple-300 shadow-sm backdrop-blur-md"
+        {/* File Attachment Chip */}
+        {selectedFile && (
+          <div className="mb-2 inline-flex items-center gap-1.5 rounded-md border border-slate-200 dark:border-white/10 bg-white dark:bg-[#121215] px-2 py-1 text-xs text-slate-700 dark:text-slate-300 shadow-sm">
+            <Paperclip size={12} className="shrink-0 text-slate-400" />
+            <span className="truncate max-w-[200px] font-medium">{selectedFile.name}</span>
+            <button
+              onClick={() => setSelectedFile(null)}
+              className="ml-1 p-0.5 rounded hover:bg-slate-100 dark:hover:bg-white/10 text-slate-400 hover:text-red-500 transition cursor-pointer"
             >
-              <Paperclip size={13} className="shrink-0 text-purple-500" />
-              <span className="truncate max-w-[240px] font-semibold">
-                {selectedFile.name}
-              </span>
-              <button
-                onClick={() => setSelectedFile(null)}
-                className="ml-1 p-0.5 rounded-full hover:bg-purple-200/50 dark:hover:bg-purple-500/20 text-slate-400 hover:text-red-500 transition cursor-pointer"
-              >
-                <X size={12} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              <X size={12} />
+            </button>
+          </div>
+        )}
 
         {/* Agent Selector Pills Bar */}
         <div
           ref={agentDockRef}
-          className="mb-2.5 flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar scroll-smooth"
+          className="mb-2 flex items-center gap-1 overflow-x-auto pb-1 no-scrollbar scroll-smooth"
         >
           {agentsList.map((agt) => {
             const Icon = agt.icon;
@@ -57,41 +49,34 @@ export default function ChatInputDock({
               <button
                 key={agt.id}
                 onClick={() => setSelectedAgent(agt.id)}
-                className={`relative flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all duration-200 cursor-pointer shrink-0 border ${
+                className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold transition shrink-0 cursor-pointer border ${
                   active
-                    ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white border-transparent shadow-md shadow-purple-500/25"
-                    : "bg-white/80 dark:bg-slate-900/80 text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-white/[0.08] hover:border-purple-500/30 hover:text-slate-900 dark:hover:text-white"
+                    ? "bg-slate-900 dark:bg-white text-white dark:text-slate-900 border-transparent shadow-sm"
+                    : "bg-white dark:bg-[#121215] text-slate-600 dark:text-slate-400 border-slate-200/80 dark:border-white/[0.08] hover:border-slate-300 dark:hover:border-slate-700"
                 }`}
               >
-                <Icon
-                  size={13}
-                  className={active ? "text-white animate-pulse" : "text-purple-500"}
-                />
+                <Icon size={12} className={active ? "text-white dark:text-slate-900" : "text-slate-400"} />
                 <span>{agt.name}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Input Container */}
-        <div className="relative rounded-2xl border border-slate-200/80 dark:border-white/[0.09] bg-white/90 dark:bg-slate-900/90 shadow-2xl backdrop-blur-2xl focus-within:border-purple-500/60 focus-within:ring-2 focus-within:ring-purple-500/20 transition-all overflow-hidden">
+        {/* Composer Box */}
+        <div className="rounded-lg border border-slate-200/80 dark:border-white/[0.08] bg-white dark:bg-[#121215] shadow-md focus-within:border-slate-400 dark:focus-within:border-slate-600 transition overflow-hidden">
           
           {/* Agent Hint Bar */}
-          <div className="px-4 pt-2.5 pb-1 text-[11px] text-slate-400 dark:text-slate-500 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.04]">
-            <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-purple-600 dark:text-purple-400 flex items-center gap-1">
-                <Sparkles size={11} />
-                {agentsList.find((a) => a.id === selectedAgent)?.name}
-              </span>
-              <span>· {agentInfo[selectedAgent]}</span>
-            </div>
+          <div className="px-3 pt-1.5 pb-0.5 text-[11px] text-slate-400 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.04]">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              {currentAgentName} Mode · Ready
+            </span>
             <span className="hidden sm:flex items-center gap-1 text-[10px] text-slate-400 font-mono">
-              <span>Enter to send</span>
+              <span>Send</span>
               <CornerDownLeft size={10} />
             </span>
           </div>
 
-          <div className="flex items-end gap-2 px-4 py-2.5">
+          <div className="flex items-end gap-2 px-3 py-1.5">
             {/* Hidden File Input */}
             <input
               type="file"
@@ -101,16 +86,14 @@ export default function ChatInputDock({
             />
 
             {/* File Attach Button */}
-            <motion.button
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.94 }}
+            <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="mb-1 p-2 rounded-xl text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-white/10 transition cursor-pointer shrink-0"
+              className="mb-0.5 p-1 rounded-md text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/5 transition cursor-pointer shrink-0"
               title="Attach document or image"
             >
-              <Paperclip size={18} />
-            </motion.button>
+              <Paperclip size={15} />
+            </button>
 
             {/* Textarea Input */}
             <textarea
@@ -120,28 +103,26 @@ export default function ChatInputDock({
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder={getPlaceholderText()}
-              className="flex-1 resize-none bg-transparent text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none py-1.5 leading-relaxed max-h-[200px] overflow-y-auto"
+              className="flex-1 resize-none bg-transparent text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 outline-none py-1 leading-relaxed max-h-[160px] overflow-y-auto"
             />
 
             {/* Send Button */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.92 }}
+            <button
               onClick={() => handleSendMessage()}
               disabled={!inputMessage.trim() && !selectedFile}
-              className={`mb-0.5 flex size-9 items-center justify-center rounded-xl transition-all cursor-pointer shrink-0 ${
+              className={`mb-0.5 flex size-7 items-center justify-center rounded-md transition shrink-0 cursor-pointer ${
                 inputMessage.trim() || selectedFile
-                  ? "bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50"
-                  : "bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-60"
+                  ? "bg-purple-600 hover:bg-purple-500 text-white shadow-sm"
+                  : "bg-slate-100 dark:bg-white/[0.05] text-slate-400 dark:text-slate-600 cursor-not-allowed"
               }`}
             >
-              <Send size={15} />
-            </motion.button>
+              <Send size={13} />
+            </button>
           </div>
         </div>
 
-        <p className="mt-2 text-center text-[10px] text-slate-400 dark:text-slate-600 font-medium">
-          Agentra Swarm Engine • Powered by multi-agent real-time synthesis.
+        <p className="mt-1 text-center text-[10px] text-slate-400 dark:text-slate-600 font-normal">
+          Agentra Multi-Agent Swarm
         </p>
       </div>
     </div>

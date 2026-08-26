@@ -9,21 +9,29 @@ from utils.agent_limit import check_agent_limit
 from utils.deduct_credits import deduct_credits
 
 
+def extract_text(content) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict) and "text" in part:
+                text_parts.append(str(part["text"]))
+            elif hasattr(part, "text"):
+                text_parts.append(str(getattr(part, "text", "")))
+        return "".join(text_parts)
+    return str(content)
+
+
 async def image_analyzer(state: AgentState):
 
     try:
-        # ---------------------------------
-        # CHECK AGENT LIMIT
-        # ---------------------------------
-
         await check_agent_limit(
             state["user_id"],
             "image"
         )
-
-        # ---------------------------------
-        # GET VISION MODEL
-        # ---------------------------------
 
         llm = await get_llm_model(
             "imageAnalyzer"
@@ -41,15 +49,7 @@ async def image_analyzer(state: AgentState):
             image_bytes
         ).decode("utf-8")
 
-        # ---------------------------------
-        # MIME TYPE
-        # ---------------------------------
-
         mime_type = file.get("content_type", "image/jpeg")
-
-        # ---------------------------------
-        # MESSAGES
-        # ---------------------------------
 
         messages = [
 
@@ -91,30 +91,20 @@ Rules:
             ),
         ]
 
-        # ---------------------------------
-        # CALL MODEL
-        # ---------------------------------
-
         response = await llm.ainvoke(
             messages
         )
-
-        # ---------------------------------
-        # DEDUCT CREDITS
-        # ---------------------------------
 
         await deduct_credits(
             state["user_id"],
             "vision"
         )
 
-        # ---------------------------------
-        # RETURN
-        # ---------------------------------
+        ai_text = extract_text(response.content)
 
         return {
             **state,
-            "ai_response": response.content,
+            "ai_response": ai_text,
         }
 
     except Exception as error:
@@ -126,27 +116,6 @@ Rules:
         return {
             **state,
             "ai_response": (
-                "Failed to analyze image"
+                "Failed to analyze the image."
             ),
         }
-
-    finally:
-
-        # ---------------------------------
-        # DELETE TEMP IMAGE
-        # ---------------------------------
-
-        try:
-            file = state.get("file")
-            if file and file.get("path"):
-                image_path = Path(file["path"])
-
-                if image_path.exists():
-                    image_path.unlink()
-
-        except Exception as cleanup_error:
-
-            print(
-                f"Image cleanup error: "
-                f"{cleanup_error}"
-            )

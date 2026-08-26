@@ -9,7 +9,6 @@ from app.database.database import Base, engine
 from app.config.db_config import settings
 
 
-# Create database tables
 Base.metadata.create_all(
     bind=engine
 )
@@ -22,11 +21,9 @@ app = FastAPI(
 )
 
 
-# Register authentication routes
 app.include_router(route)
 
 
-# Health check
 @app.get("/health")
 async def health_check():
 
@@ -36,7 +33,6 @@ async def health_check():
     }
 
 
-# Root
 @app.get("/")
 async def root():
 

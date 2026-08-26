@@ -30,7 +30,6 @@ def generate_pdf(data: dict) -> bytes:
         creator="CortexAI",
     )
 
-    # Styles
     title_style = ParagraphStyle(
         "Title",
         fontName="Helvetica-Bold",
@@ -78,14 +77,12 @@ def generate_pdf(data: dict) -> bytes:
 
     story = []
 
-    # Title
     title = data.get("title", "")
 
     story.append(
         Paragraph(title, title_style)
     )
 
-    # Subtitle
     subtitle = data.get("subtitle")
 
     if subtitle:
@@ -95,7 +92,6 @@ def generate_pdf(data: dict) -> bytes:
 
     story.append(Spacer(1, 30))
 
-    # Sections
     for section in data.get("sections", []):
 
         heading = section.get("heading", "")
@@ -132,7 +128,6 @@ def generate_pdf(data: dict) -> bytes:
 
         story.append(Spacer(1, 15))
 
-    # Footer
     story.append(Spacer(1, 15))
 
     story.append(
@@ -142,10 +137,8 @@ def generate_pdf(data: dict) -> bytes:
         )
     )
 
-    # Build PDF
     doc.build(story)
 
-    # Return bytes
     pdf_bytes = buffer.getvalue()
     buffer.close()
 

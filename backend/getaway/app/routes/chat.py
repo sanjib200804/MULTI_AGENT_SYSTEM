@@ -20,10 +20,8 @@ async def proxy_chat(path: str, request: Request):
     if user_email is not None:
         headers["X-User-Email"] = user_email
 
-    # Forward query parameters
     query_params = request.query_params
 
-    # Read body
     body = await request.body()
 
     async with httpx.AsyncClient() as client:

@@ -1,16 +1,18 @@
-import { MenuIcon, XIcon, Sparkles, ArrowRight, ShieldCheck } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useThemeContext } from "../context/ThemeContext";
+import { MenuIcon, XIcon, ArrowRight, LogOut, LayoutDashboard, Coins } from "lucide-react";
+import { useEffect, useState, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useAuthContext } from "../context/AuthContext";
 import { navLinks } from "../data/navLinks";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 
 export default function NavBar() {
   const [openMobileMenu, setOpenMobileMenu] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const { theme } = useThemeContext();
-  const { user, setIsAuthModalOpen, logout } = useAuthContext();
+  const { user, setIsAuthModalOpen, setIsPricingModalOpen, logout } = useAuthContext();
+  const navigate = useNavigate();
+  const profileRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,7 +22,6 @@ export default function NavBar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Prevent background scrolling when mobile menu is open
   useEffect(() => {
     document.body.style.overflow = openMobileMenu ? "hidden" : "";
     return () => {
@@ -28,91 +29,148 @@ export default function NavBar() {
     };
   }, [openMobileMenu]);
 
+  // Click outside to close profile dropdown
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setOpenProfile(false);
+      }
+    };
+    if (openProfile) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [openProfile]);
+
   const closeMobileMenu = () => {
     setOpenMobileMenu(false);
   };
 
+  const userCredits = user?.credits ?? user?.credit ?? 100;
+  const userName = user?.fullname || user?.displayName || user?.name || "User";
+  const userEmail = user?.email || "";
+  const userAvatar = user?.avatar || user?.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}`;
+
   return (
     <header
-      className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
+      className={`fixed top-0 left-0 z-50 w-full transition-all duration-200 ${
         scrolled
-          ? "bg-white/80 dark:bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/[0.08] py-3 shadow-md shadow-slate-900/5 dark:shadow-black/20"
-          : "bg-transparent py-5"
+          ? "bg-white/80 dark:bg-[#09090b]/80 backdrop-blur-xl border-b border-slate-200/80 dark:border-white/10 py-3"
+          : "bg-transparent py-4"
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12 lg:px-16">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-10">
         
-        {/* Logo & Brand Indicator */}
-        <div className="flex items-center gap-4">
-          <Link to="/" onClick={closeMobileMenu} className="flex items-center gap-2.5 group">
-            <img
-              className="h-8 w-auto shrink-0 transition-transform group-hover:scale-105"
-              src={
-                theme === "dark"
-                  ? "/assets/logo-light.svg"
-                  : "/assets/logo-dark.svg"
-              }
-              alt="Agentra AI"
-              width={130}
-              height={36}
-            />
-          </Link>
-          
-          <div className="hidden lg:flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
-            <span className="relative flex size-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex rounded-full size-1.5 bg-emerald-500" />
-            </span>
-            <span>Swarm Online</span>
-          </div>
-        </div>
+        {/* Brand Text */}
+        <Link to="/" onClick={closeMobileMenu} className="text-xl md:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white transition-colors">
+          Agentra<span className="text-purple-600 dark:text-purple-400">.AI</span>
+        </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden items-center gap-1 rounded-full border border-slate-200/80 dark:border-white/[0.08] bg-white/50 dark:bg-slate-900/50 px-3 py-1.5 backdrop-blur-md md:flex shadow-inner">
+        <nav className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              className="rounded-full px-4 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
-            >
-              {link.name}
-            </Link>
+            link.name === "Pricing" ? (
+              <button
+                key={link.name}
+                onClick={() => setIsPricingModalOpen(true)}
+                className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
+              >
+                {link.name}
+              </button>
+            ) : (
+              <Link
+                key={link.name}
+                to={link.href}
+                className="text-xs font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+              >
+                {link.name}
+              </Link>
+            )
           ))}
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
           <ThemeToggle />
 
-          {user ? (
-            <div className="flex items-center gap-2.5">
-              <Link
-                to="/dashboard"
-                className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 px-4 py-2 text-xs font-semibold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/35 hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer"
-              >
-                <span>Dashboard</span>
-                <ArrowRight size={13} />
-              </Link>
-              <button
-                onClick={logout}
-                className="rounded-xl border border-slate-200 dark:border-white/[0.1] bg-white/70 dark:bg-slate-900/70 px-3.5 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition"
-              >
-                Sign Out
-              </button>
+          {user && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-300">
+              <Coins size={14} className="text-purple-600 dark:text-purple-400" />
+              <span>Credits:</span>
+              <span className="font-bold text-slate-900 dark:text-white">{userCredits}</span>
             </div>
-          ) : (
+          )}
+
+          {!user ? (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-700 px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-purple-500/20 hover:shadow-purple-500/35 hover:scale-[1.02] active:scale-[0.98] transition cursor-pointer"
+              className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-xs font-semibold text-white transition cursor-pointer shadow-sm"
             >
-              <Sparkles size={13} />
-              <span>Get Started</span>
+              Get started
             </button>
+          ) : (
+            <div className="relative" ref={profileRef}>
+              <button
+                className="flex items-center cursor-pointer"
+                onClick={() => setOpenProfile(!openProfile)}
+              >
+                <img
+                  className="w-9 h-9 rounded-full border border-slate-300 dark:border-white/20 object-cover shadow-sm"
+                  src={userAvatar}
+                  alt={userName}
+                />
+              </button>
+
+              <AnimatePresence>
+                {openProfile && (
+                  <motion.div
+                    className="absolute right-0 mt-3 w-60 z-50 rounded-xl bg-white dark:bg-[#0b0b0b] border border-slate-200 dark:border-white/10 shadow-2xl overflow-hidden text-left"
+                    initial={{ y: -10, scale: 0.95, opacity: 0 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <div className="px-4 py-3 border-b border-slate-100 dark:border-white/10">
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white truncate">
+                        {userName}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                        {userEmail}
+                      </p>
+                    </div>
+
+                    <button
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
+                      onClick={() => {
+                        setOpenProfile(false);
+                        navigate('/dashboard');
+                      }}
+                    >
+                      <LayoutDashboard size={14} />
+                      <span>Dashboard</span>
+                    </button>
+
+                    <button
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-red-500 hover:bg-red-50 dark:hover:bg-white/5 transition cursor-pointer border-t border-slate-100 dark:border-white/5"
+                      onClick={() => {
+                        setOpenProfile(false);
+                        logout();
+                      }}
+                    >
+                      <LogOut size={14} />
+                      <span>Logout</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           )}
         </div>
 
         {/* Mobile Actions */}
-        <div className="flex items-center gap-3 md:hidden">
+        <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
 
           <button
@@ -120,53 +178,70 @@ export default function NavBar() {
             onClick={() => setOpenMobileMenu((prev) => !prev)}
             aria-label={openMobileMenu ? "Close menu" : "Open menu"}
             aria-expanded={openMobileMenu}
-            className="p-2 rounded-xl border border-slate-200 dark:border-white/10 bg-white/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-200"
+            className="p-1.5 rounded-lg border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-white/5 text-slate-800 dark:text-white"
           >
-            {openMobileMenu ? <XIcon size={20} /> : <MenuIcon size={20} />}
+            {openMobileMenu ? <XIcon size={18} /> : <MenuIcon size={18} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Navigation Drawer */}
+      {/* Mobile Drawer */}
       <div
-        className={`fixed inset-0 top-[65px] z-40 flex flex-col justify-between bg-slate-50/95 dark:bg-[#0A0A0F]/95 backdrop-blur-2xl px-6 py-8 transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 top-[60px] z-40 flex flex-col justify-between bg-white dark:bg-[#09090b] px-6 py-6 transition-all duration-200 md:hidden ${
           openMobileMenu
             ? "opacity-100 pointer-events-auto translate-y-0"
-            : "opacity-0 pointer-events-none -translate-y-4"
+            : "opacity-0 pointer-events-none -translate-y-2"
         }`}
       >
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1">
           {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              to={link.href}
-              onClick={closeMobileMenu}
-              className="rounded-xl px-4 py-3 text-base font-semibold text-slate-800 dark:text-slate-200 hover:bg-purple-50 dark:hover:bg-white/5 hover:text-purple-600 transition"
-            >
-              {link.name}
-            </Link>
+            link.name === "Pricing" ? (
+              <button
+                key={link.name}
+                onClick={() => {
+                  closeMobileMenu();
+                  setIsPricingModalOpen(true);
+                }}
+                className="text-left rounded-md px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition"
+              >
+                {link.name}
+              </button>
+            ) : (
+              <Link
+                key={link.name}
+                to={link.href}
+                onClick={closeMobileMenu}
+                className="rounded-md px-3 py-2 text-sm font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white transition"
+              >
+                {link.name}
+              </Link>
+            )
           ))}
         </div>
 
-        <div className="flex flex-col gap-3 pt-6 border-t border-slate-200/80 dark:border-white/10">
+        <div className="flex flex-col gap-2 pt-4 border-t border-slate-200 dark:border-white/10">
           {user ? (
             <>
+              <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-slate-300">
+                <span>Credits</span>
+                <span className="font-bold text-slate-900 dark:text-white">{userCredits}</span>
+              </div>
               <Link
                 to="/dashboard"
                 onClick={closeMobileMenu}
-                className="flex justify-center items-center gap-2 rounded-xl bg-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20"
+                className="flex justify-center items-center gap-2 rounded-lg bg-purple-600 text-white py-2.5 text-xs font-semibold shadow-sm"
               >
-                <span>Dashboard</span>
-                <ArrowRight size={15} />
+                <span>Go to Dashboard</span>
+                <ArrowRight size={14} />
               </Link>
               <button
                 onClick={() => {
                   closeMobileMenu();
                   logout();
                 }}
-                className="rounded-xl border border-slate-200 dark:border-white/10 py-3 text-sm font-semibold text-slate-700 dark:text-slate-300"
+                className="rounded-lg border border-slate-200 dark:border-white/10 py-2.5 text-xs font-semibold text-red-500 hover:bg-red-50 dark:hover:bg-white/5 transition"
               >
-                Sign Out
+                Logout
               </button>
             </>
           ) : (
@@ -175,10 +250,9 @@ export default function NavBar() {
                 closeMobileMenu();
                 setIsAuthModalOpen(true);
               }}
-              className="flex justify-center items-center gap-2 rounded-xl bg-purple-600 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20"
+              className="rounded-lg bg-purple-600 text-white py-2.5 text-xs font-semibold shadow-sm"
             >
-              <Sparkles size={16} />
-              <span>Get Started Free</span>
+              Get Started
             </button>
           )}
         </div>

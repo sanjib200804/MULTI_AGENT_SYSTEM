@@ -1,6 +1,19 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/atom-one-dark.css";
+
+function extractRawText(children) {
+    if (typeof children === "string") return children;
+    if (Array.isArray(children)) {
+        return children.map(extractRawText).join("");
+    }
+    if (children && children.props && children.props.children) {
+        return extractRawText(children.props.children);
+    }
+    return String(children || "");
+}
 
 /**
  * MarkdownMessage
@@ -12,6 +25,7 @@ export default function MarkdownMessage({ content, isUser }) {
         <div className={`markdown-body text-xs leading-6 ${isUser ? "text-slate-800 dark:text-slate-100" : "text-slate-700 dark:text-slate-100"}`}>
             <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeHighlight]}
                 components={{
                     // ── Headings ─────────────────────────────────────────────
                     h1: ({ children }) => (
@@ -75,7 +89,7 @@ export default function MarkdownMessage({ content, isUser }) {
                         <del className="line-through text-slate-400">{children}</del>
                     ),
 
-                    // ── Inline Code ──────────────────────────────────────────
+                    // ── Inline & Fenced Code ──────────────────────────────────
                     code: ({ inline, className, children }) => {
                         if (inline) {
                             return (
@@ -85,26 +99,29 @@ export default function MarkdownMessage({ content, isUser }) {
                             );
                         }
 
-                        // Fenced code block — extract language from className
-                        const lang = className ? className.replace("language-", "") : "code";
+                        // Extract language name from className e.g. "language-python hljs"
+                        const langMatch = className ? className.match(/language-([^\s]+)/) : null;
+                        const lang = langMatch ? langMatch[1] : (className ? className.replace("hljs", "").trim() : "code");
+                        const rawText = extractRawText(children);
+
                         return (
-                            <div className="my-3 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div className="my-3 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg">
                                 {/* Language label bar */}
-                                <div className="flex items-center justify-between px-4 py-1.5 bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-                                    <span className="text-[10px] font-semibold text-purple-500 dark:text-purple-400 uppercase tracking-wider">
-                                        {lang}
+                                <div className="flex items-center justify-between px-4 py-1.5 bg-[#21252b] border-b border-slate-700/50">
+                                    <span className="text-[10px] font-bold text-purple-400 uppercase tracking-wider">
+                                        {lang || "code"}
                                     </span>
-                                    <CopyCodeButton text={String(children)} />
+                                    <CopyCodeButton text={rawText} />
                                 </div>
-                                {/* Code body */}
-                                <pre className="overflow-x-auto p-4 bg-slate-950 dark:bg-[#0d1117] text-slate-300 text-[11px] font-mono leading-5 whitespace-pre">
-                                    <code>{children}</code>
+                                {/* Code body with syntax highlighting colors */}
+                                <pre className="overflow-x-auto p-4 bg-[#282c34] text-slate-100 text-[11px] font-mono leading-5 whitespace-pre">
+                                    <code className={className}>{children}</code>
                                 </pre>
                             </div>
                         );
                     },
 
-                    // ── Pre (wraps fenced code, already handled in code) ─────
+                    // ── Pre (wraps fenced code, handled in code) ─────────────
                     pre: ({ children }) => <>{children}</>,
 
                     // ── Blockquote ───────────────────────────────────────────
@@ -170,7 +187,7 @@ function CopyCodeButton({ text }) {
     return (
         <button
             onClick={handleCopy}
-            className="text-[10px] text-slate-400 dark:text-slate-500 hover:text-white transition cursor-pointer px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 hover:bg-purple-600 dark:hover:bg-purple-600"
+            className="text-[10px] text-slate-300 hover:text-white transition cursor-pointer px-2 py-0.5 rounded bg-white/10 hover:bg-purple-600 font-sans"
         >
             {copied ? "✓ Copied" : "Copy"}
         </button>

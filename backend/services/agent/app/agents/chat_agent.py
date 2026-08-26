@@ -1,17 +1,33 @@
-
-from langchain_core.messages import AIMessage ,SystemMessage, HumanMessage
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 from utils.memory import get_Memory
 from core.state import AgentState
 from config.llmModels import get_llm_model
 from utils.agent_limit import check_agent_limit
 from utils.deduct_credits import deduct_credits
 
+
+def extract_text(content) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict) and "text" in part:
+                text_parts.append(str(part["text"]))
+            elif hasattr(part, "text"):
+                text_parts.append(str(getattr(part, "text", "")))
+        return "".join(text_parts)
+    return str(content)
+
+
 async def chat_agent(state: AgentState):
     try:
         await check_agent_limit(
             state["user_id"],
             "chat"
-        )        
+        )
         llm = await get_llm_model('chat')
         history = await get_Memory(state['conversation_id'])
 
@@ -26,7 +42,6 @@ Web Search Results:
 Answer the user using only the above search results.
 """
 
-        # System prompt
         system_prompt = f"""
 You are CortexAI, an intelligent AI assistant.
 
@@ -39,10 +54,8 @@ If searchContext exists:
 
 Rules:
 
-- For simple questions, greetings, and short queries,
-  respond naturally in plain text.
-- For technical, educational, coding, or detailed topics,
-  use clean Markdown.
+- For simple questions, greetings, and short queries, respond naturally in plain text.
+- For technical, educational, coding, or detailed topics, use clean Markdown.
 
 Formatting:
 
@@ -52,8 +65,6 @@ Formatting:
 - Use numbered lists for steps.
 - Use fenced code blocks with language tags for code.
 - Keep paragraphs short and readable.
-- Never write headings and content on the same line.
-- Never generate large walls of text.
 """
 
         messages = [
@@ -83,9 +94,11 @@ Formatting:
             "chat"
         )
 
+        ai_text = extract_text(response.content)
+
         return {
             **state,
-            "ai_response": response.content
+            "ai_response": ai_text
         }
 
     except Exception as error:

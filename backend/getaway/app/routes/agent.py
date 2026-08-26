@@ -20,13 +20,10 @@ async def proxy_agent(path: str, request: Request):
     if user_email is not None:
         headers["X-User-Email"] = user_email
 
-    # Forward query parameters
     query_params = request.query_params
 
-    # Read body
     body = await request.body()
 
-    # Construct destination URL path relative to agent service
     url_path = f"agent/{path}" if path else "agent"
 
     async with httpx.AsyncClient(timeout=300.0) as client:

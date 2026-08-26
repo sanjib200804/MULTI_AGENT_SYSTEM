@@ -1,19 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Geist:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 @theme {
-    --font-inter: "Inter", sans-serif;
-    --font-jakarta: "Plus Jakarta Sans", sans-serif;
+    --font-inter: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-geist: "Geist", "Inter", sans-serif;
+    --font-mono: "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", monospace;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+@variant dark (&:where(.dark, .dark *));
 
 :root {
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
 body {
-    @apply bg-slate-50 text-slate-900 dark:bg-[#0A0A0F] dark:text-slate-100 text-sm font-inter antialiased selection:bg-purple-500/25 selection:text-purple-300;
+    @apply bg-slate-50 text-slate-900 dark:bg-[#09090b] dark:text-slate-100 text-sm font-inter antialiased selection:bg-purple-500/20 selection:text-purple-300;
 }
 
 button {
@@ -24,12 +26,6 @@ button {
 .bg-grid-mesh {
     background-size: 32px 32px;
     background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-}
-
-.dark .bg-grid-mesh {
-    background-image: 
         linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
@@ -37,51 +33,33 @@ button {
 .bg-grid-mesh-light {
     background-size: 32px 32px;
     background-image: 
-        linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+        linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
 }
 
-/* Glassmorphism & Surface Utilities */
+/* Glass & Surface Utilities */
 .glass-panel {
-    @apply bg-white/70 dark:bg-slate-900/60 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-sm;
+    @apply bg-white/80 dark:bg-[#121215]/80 backdrop-blur-md border border-slate-200/80 dark:border-white/[0.08] shadow-sm;
 }
 
 .glass-card-hover {
-    @apply transition-all duration-300 hover:border-purple-500/40 dark:hover:border-purple-500/40 hover:shadow-xl hover:shadow-purple-500/10 hover:-translate-y-1;
-}
-
-/* Keyframe Animations */
-@keyframes pulseGlow {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.03); }
-}
-
-.animate-pulseGlow {
-    animation: pulseGlow 6s ease-in-out infinite;
-}
-
-@keyframes floatSlow {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-8px); }
-}
-
-.animate-float {
-    animation: floatSlow 5s ease-in-out infinite;
+    @apply transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md;
 }
 
 /* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
+    height: 5px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
     background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.2);
+    background: rgba(148, 163, 184, 0.25);
     border-radius: 9999px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(148, 163, 184, 0.4);
+    background: rgba(148, 163, 184, 0.45);
 }
 
 .no-scrollbar::-webkit-scrollbar {

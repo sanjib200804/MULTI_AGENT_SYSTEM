@@ -1,12 +1,10 @@
-import { SparklesIcon } from "lucide-react";
-import { useThemeContext } from "../context/ThemeContext";
+import { Sparkles } from "lucide-react";
 import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import SectionTitle from "../components/SectionTitle";
 import { pricingData } from "../data/pricingData";
 
 export default function Pricing() {
-    const { theme } = useThemeContext();
     const { user, setIsAuthModalOpen } = useAuthContext();
     const navigate = useNavigate();
 
@@ -19,39 +17,66 @@ export default function Pricing() {
     };
 
     return (
-        <div className="relative">
-            <img className="absolute -mt-20 md:-mt-100 md:left-20 pointer-events-none" src={theme === "dark" ? "/assets/color-splash.svg" : "/assets/color-splash-light.svg"} alt="color-splash" width={1000} height={1000} priority fetchPriority="high" />
-            <SectionTitle text1="PRICING" text2="Our Pricing Plans" text3="Flexible pricing options designed to meet your needs — whether you're just getting started or scaling up." />
+        <section id="pricing" className="py-20 px-6 max-w-7xl mx-auto">
+            <SectionTitle
+                text1="PRICING"
+                text2="Transparent Pricing Plans"
+                text3="Flexible options designed for developers and teams scaling autonomous agent workflows."
+            />
 
-            <div className="flex flex-wrap items-center justify-center gap-6 mt-16">
+            <div className="flex flex-wrap items-stretch justify-center gap-6 mt-14">
                 {pricingData.map((plan, index) => (
-                    <div key={index} className={`p-6 rounded-2xl max-w-75 w-full shadow-[0px_4px_26px] shadow-black/6 ${plan.mostPopular ? "relative pt-12 bg-gradient-to-b from-indigo-600 to-violet-600" : "bg-white/50 dark:bg-gray-800/50 border border-slate-200 dark:border-slate-800"}`}>
-                        {plan.mostPopular && (
-                            <div className="flex items-center text-xs gap-1 py-1.5 px-2 text-purple-600 absolute top-4 right-4 rounded bg-white font-medium">
-                                <SparklesIcon size={14} />
-                                <p>Most Popular</p>
+                    <div
+                        key={index}
+                        className={`flex flex-col justify-between p-6 rounded-2xl w-full max-w-sm border transition-all duration-200 ${
+                            plan.mostPopular
+                                ? "bg-slate-900 text-white border-purple-500/50 shadow-xl shadow-purple-500/10 dark:bg-[#121217]"
+                                : "bg-white dark:bg-[#121215] border-slate-200 dark:border-white/[0.08] text-slate-800 dark:text-slate-100"
+                        }`}
+                    >
+                        <div>
+                            <div className="flex items-center justify-between mb-4">
+                                <span className={`text-sm font-bold ${plan.mostPopular ? "text-purple-400" : "text-slate-900 dark:text-white"}`}>
+                                    {plan.title}
+                                </span>
+                                {plan.mostPopular && (
+                                    <span className="flex items-center gap-1 text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                                        <Sparkles size={11} />
+                                        <span>Popular</span>
+                                    </span>
+                                )}
                             </div>
-                        )}
-                        <p className={plan.mostPopular && "text-white"}>{plan.title}</p>
-                        <h4 className={`text-3xl font-semibold mt-1 ${plan.mostPopular && "text-white"}`}>${plan.price}<span className={`font-normal text-sm ${plan.mostPopular ? "text-white" : "text-slate-300"}`}>/mo</span></h4>
-                        <hr className={`my-8 ${plan.mostPopular ? "border-gray-300" : "border-slate-300 dark:border-slate-700"}`} />
-                        <div className={`space-y-2 ${plan.mostPopular ? "text-white" : "text-slate-600 dark:text-slate-300"}`}>
-                            {plan.features.map((feature, index) => (
-                                <div key={index} className="flex items-center gap-1.5">
-                                    <feature.icon size={18} className={`${plan.mostPopular ? "text-white" : "text-purple-600"}`} />
-                                    <span>{feature.name}</span>
-                                </div>
-                            ))}
+
+                            <div className="flex items-baseline gap-1 my-3">
+                                <span className="text-3xl font-extrabold tracking-tight">${plan.price}</span>
+                                <span className="text-xs text-slate-400">/month</span>
+                            </div>
+
+                            <hr className={`my-5 ${plan.mostPopular ? "border-white/10" : "border-slate-100 dark:border-white/[0.06]"}`} />
+
+                            <div className="space-y-3">
+                                {plan.features.map((feature, idx) => (
+                                    <div key={idx} className="flex items-center gap-2.5 text-xs text-slate-600 dark:text-slate-300 font-medium">
+                                        <feature.icon size={15} className="text-purple-500 shrink-0" />
+                                        <span>{feature.name}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
+
                         <button
                             onClick={handleCtaClick}
-                            className={`transition w-full py-3 rounded-lg font-medium mt-8 cursor-pointer ${plan.mostPopular ? "bg-white hover:bg-slate-100 text-slate-800" : "bg-purple-600 hover:bg-purple-700 text-white"}`}
+                            className={`mt-8 w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition cursor-pointer ${
+                                plan.mostPopular
+                                    ? "bg-purple-600 hover:bg-purple-500 text-white shadow-md shadow-purple-500/25"
+                                    : "bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100"
+                            }`}
                         >
-                            <span>{plan.buttonText}</span>
+                            {plan.buttonText}
                         </button>
                     </div>
                 ))}
             </div>
-        </div>
+        </section>
     );
 }

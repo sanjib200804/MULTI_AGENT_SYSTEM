@@ -111,10 +111,10 @@ export default function Chat() {
 
     if (loading) {
         return (
-            <div className="flex h-screen w-screen items-center justify-center bg-white dark:bg-[#0A0A0F] text-slate-800 dark:text-white">
+            <div className="flex h-screen w-screen items-center justify-center bg-white dark:bg-[#09090b] text-slate-800 dark:text-white">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="relative flex size-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-xl shadow-purple-500/25">
-                        <Sparkles size={28} className="animate-spin text-white" />
+                    <div className="relative flex size-12 items-center justify-center rounded-xl bg-purple-600 shadow-sm">
+                        <Sparkles size={24} className="animate-spin text-white" />
                     </div>
                     <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 tracking-widest uppercase animate-pulse">
                         Initializing Agentra AI…
@@ -253,7 +253,7 @@ export default function Chat() {
     const userInitials = (user.fullname || user.displayName || "U").slice(0, 1).toUpperCase();
 
     return (
-        <div className="flex h-screen w-screen bg-slate-50 dark:bg-[#0A0A0F] text-slate-800 dark:text-slate-100 font-sans overflow-hidden pt-16 selection:bg-purple-500/30">
+        <div className="flex h-screen w-screen bg-slate-50 dark:bg-[#09090b] text-slate-800 dark:text-slate-100 font-sans overflow-hidden pt-16 selection:bg-purple-500/20">
 
             {/* Sidebar component */}
             <Sidebar
@@ -269,7 +269,7 @@ export default function Chat() {
             />
 
             {/* MAIN CONTENT AREA */}
-            <main className="relative flex flex-1 flex-col h-full overflow-hidden bg-slate-50/60 dark:bg-[#0A0A0F]/60">
+            <main className="relative flex flex-1 flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-[#09090b]">
 
                 {/* Mobile floating sidebar menu button */}
                 <button

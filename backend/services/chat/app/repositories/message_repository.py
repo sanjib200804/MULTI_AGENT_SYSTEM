@@ -2,8 +2,7 @@ from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from app.models.message_model import MessageModel ,MessageRole
-
+from app.models.message_model import MessageModel, MessageRole
 
 
 class MessageRepository:
@@ -11,7 +10,6 @@ class MessageRepository:
     def __init__(self, db: Session):
         self.db = db
 
-    # Create message
     def create(
         self,
         conversation_id: UUID,
@@ -20,7 +18,9 @@ class MessageRepository:
         agent_name: str | None = None,
         message_type: str = "text",
         model_name: str | None = None,
-        token_usage: int | None = None
+        token_usage: int | None = None,
+        images: list | None = None,
+        artifacts: list | None = None
     ) -> MessageModel:
 
         message = MessageModel(
@@ -30,7 +30,9 @@ class MessageRepository:
             agent_name=agent_name,
             message_type=message_type,
             model_name=model_name,
-            token_usage=token_usage
+            token_usage=token_usage,
+            images=images or [],
+            artifacts=artifacts or []
         )
 
         self.db.add(message)
@@ -39,7 +41,6 @@ class MessageRepository:
 
         return message
 
-    # Get message by ID
     def get_by_id(
         self,
         message_id: UUID
@@ -53,7 +54,6 @@ class MessageRepository:
             .first()
         )
 
-    # Get all messages of a conversation
     def get_by_conversation_id(
         self,
         conversation_id: UUID
@@ -70,7 +70,6 @@ class MessageRepository:
             .all()
         )
 
-    # Delete a message
     def delete(
         self,
         message_id: UUID

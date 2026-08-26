@@ -10,9 +10,8 @@ class Settings(BaseSettings):
     PORT : int
     JWT_ALGORITHM :str
     JWT_SECRET_KEY :str
-    
-
-
+    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:5174"
+    COOKIE_SECURE: bool = False
 
 settings = Settings()
 
