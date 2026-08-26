@@ -20,3 +20,4 @@ langchain-text-splitters
 langgraph
 langchain-google-genai
 langchain-qdrant
+python-multipart
