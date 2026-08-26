@@ -2,12 +2,12 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY services/agent/requirements.txt ./requirements.txt
+COPY backend/services/agent/requirements.txt ./requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY shared ./shared
-COPY services/agent/app ./app
+COPY backend/shared ./shared
+COPY backend/services/agent/app ./app
 
 EXPOSE 8003
 
