@@ -1,6 +1,6 @@
 import redis.asyncio as redis
 
-from redis.settings import settings
+from shared.redis.settings import settings
 
 
 redis_client = redis.from_url(
