@@ -1,4 +1,4 @@
-from shared.redis.redis import redis_client
+from shared.redis.rediss import redis_client
 
 from uuid import UUID
 
