@@ -2,7 +2,8 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from app.core.security import decode_token
+from app.core.config import settings
+from app.core.security import decode_token, create_access_token
 
 
 PUBLIC_PATHS = {
@@ -39,66 +40,42 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         # ----------------------------------------------------
-        # Get access token
+        # Read cookies
         # ----------------------------------------------------
 
-        access_token = request.cookies.get(
-            "access_token"
-        )
+        access_token = request.cookies.get("access_token")
+        refresh_token = request.cookies.get("refresh_token")
 
-        if not access_token:
+        user_id = None
+        user_email = None
+        new_access_token = None
+
+        if access_token:
+            try:
+                payload = decode_token(access_token)
+                if payload.get("type") == "access":
+                    user_id = payload.get("sub")
+                    user_email = payload.get("email")
+            except Exception:
+                pass
+
+        # Fallback to refresh token if access token missing or expired
+        if not user_id and refresh_token:
+            try:
+                ref_payload = decode_token(refresh_token)
+                if ref_payload.get("type") == "refresh":
+                    user_id = ref_payload.get("sub")
+                    user_email = ref_payload.get("email")
+                    if user_id and user_email:
+                        new_access_token = create_access_token(user_id, user_email)
+            except Exception:
+                pass
+
+        if not user_id:
             return JSONResponse(
                 status_code=401,
                 content={
                     "detail": "Authentication required"
-                },
-            )
-
-        # ----------------------------------------------------
-        # Decode access token
-        # ----------------------------------------------------
-
-        try:
-
-            payload = decode_token(
-                access_token
-            )
-
-        except Exception:
-
-            return JSONResponse(
-                status_code=401,
-                content={
-                    "detail": "Invalid or expired access token"
-                },
-            )
-
-        # ----------------------------------------------------
-        # Validate token type
-        # ----------------------------------------------------
-
-        if payload.get("type") != "access":
-
-            return JSONResponse(
-                status_code=401,
-                content={
-                    "detail": "Invalid access token"
-                },
-            )
-
-        # ----------------------------------------------------
-        # Get user
-        # ----------------------------------------------------
-
-        user_id = payload.get("sub")
-        user_email = payload.get("email")
-
-        if not user_id:
-
-            return JSONResponse(
-                status_code=401,
-                content={
-                    "detail": "Invalid access token"
                 },
             )
 
@@ -114,5 +91,18 @@ class AuthMiddleware(BaseHTTPMiddleware):
         # ----------------------------------------------------
 
         response = await call_next(request)
+
+        if new_access_token:
+            samesite_val = getattr(settings, "COOKIE_SAMESITE", "none")
+            secure_val = getattr(settings, "COOKIE_SECURE", True)
+            response.set_cookie(
+                key="access_token",
+                value=new_access_token,
+                httponly=True,
+                secure=secure_val,
+                samesite=samesite_val,
+                max_age=15 * 60,
+                path="/"
+            )
 
         return response

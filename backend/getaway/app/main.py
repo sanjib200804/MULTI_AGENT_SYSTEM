@@ -14,26 +14,33 @@ app = FastAPI()
 
 
 # -----------------------------
-# CORS
-# -----------------------------
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "https://agentra-ai.onrender.com",
-        "http://localhost:5173",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-
-# -----------------------------
-# Authentication middleware
+# Authentication middleware (Inner layer)
 # -----------------------------
 
 app.add_middleware(AuthMiddleware)
+
+
+# -----------------------------
+# CORS middleware (Outer layer - wraps around AuthMiddleware)
+# -----------------------------
+
+raw_origins = getattr(settings, "CORS_ORIGINS", "")
+if not raw_origins or raw_origins.strip() == "*" or raw_origins.strip().lower() == "all":
+    cors_kwargs = {"allow_origin_regex": r".*"}
+else:
+    parsed_origins = [o.strip().rstrip("/") for o in raw_origins.split(",") if o.strip()]
+    cors_kwargs = {
+        "allow_origins": parsed_origins,
+        "allow_origin_regex": r"https://.*\.onrender\.com"
+    }
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    **cors_kwargs
+)
 
 
 # -----------------------------
