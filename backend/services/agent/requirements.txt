@@ -19,3 +19,4 @@ langchain-mistralai
 langchain-text-splitters
 langgraph
 langchain-google-genai
+langchain-qdrant
