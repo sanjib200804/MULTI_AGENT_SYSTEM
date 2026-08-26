@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     PORT : int
     JWT_ALGORITHM :str
     JWT_SECRET_KEY :str
-    CORS_ORIGINS: str = "http://localhost:5173,http://localhost:5174"
+    CORS_ORIGINS: str = "https://agentra-ai.onrender.com,http://localhost:5173,http://localhost:5174,http://localhost:3000"
     COOKIE_SECURE: bool = False
 
 settings = Settings()

@@ -13,14 +13,23 @@ app.add_middleware(
     AuthMiddleware
 )
 
-origins = [o.strip() for o in settings.CORS_ORIGINS.split(",") if o.strip()] if settings.CORS_ORIGINS != "*" else ["*"]
+raw_origins = settings.CORS_ORIGINS.strip() if settings.CORS_ORIGINS else "*"
+
+if raw_origins == "*" or raw_origins.lower() == "all":
+    cors_kwargs = {"allow_origin_regex": r".*"}
+else:
+    parsed_origins = [o.strip().rstrip("/") for o in raw_origins.split(",") if o.strip()]
+    cors_kwargs = {
+        "allow_origins": parsed_origins,
+        "allow_origin_regex": r"https://.*\.onrender\.com"
+    }
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    **cors_kwargs
 )
 
 @app.get("/health")
