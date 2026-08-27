@@ -11,7 +11,7 @@ from app.models.message_model import MessageModel
 
 Base.metadata.create_all(bind=engine)
 
-# Auto-migrate: ensure images and artifacts columns exist in message table
+
 try:
     with engine.connect() as conn:
         conn.execute(text("ALTER TABLE message ADD COLUMN IF NOT EXISTS images JSON DEFAULT '[]'::json;"))

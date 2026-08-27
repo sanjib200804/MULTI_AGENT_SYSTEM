@@ -36,7 +36,7 @@ async def agent(
     file_dict = None
     try:
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
 
             response = await client.post(
                 f"{settings.CHAT_SERVICE}/chat/save-message",
@@ -92,7 +92,7 @@ async def agent(
             ai_text
         )
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
 
             response = await client.post(
                 f"{settings.CHAT_SERVICE}/chat/save-message",

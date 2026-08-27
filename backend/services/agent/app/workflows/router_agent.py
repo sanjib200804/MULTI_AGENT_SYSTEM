@@ -1,5 +1,20 @@
 from config.llmModels import get_llm_model
 
+def extract_text(content) -> str:
+    if isinstance(content, str):
+        return content
+    if isinstance(content, list):
+        text_parts = []
+        for part in content:
+            if isinstance(part, str):
+                text_parts.append(part)
+            elif isinstance(part, dict) and "text" in part:
+                text_parts.append(str(part["text"]))
+            elif hasattr(part, "text"):
+                text_parts.append(str(getattr(part, "text", "")))
+        return "\n".join(text_parts)
+    return str(content) if content else ""
+
 async def router_agent(state):
     agent_val = state.get('agent')
     if agent_val and agent_val != 'auto':
@@ -28,71 +43,38 @@ async def router_agent(state):
     file = state.get('file')
     if file:
         content_type = file.get('content_type', '')
-
-        if content_type == 'application/pdf':
-            return {
-                **state,
-                "agent": 'pdfRag'
-            }
         if content_type.startswith('image/'):
-            return {
-                **state,
-                'agent': 'imageAnalyzer'
-            } 
-    llm = await get_llm_model('router') 
+            return {**state, 'agent': 'imageAnalyzer'}
+        if content_type == 'application/pdf':
+            return {**state, 'agent': 'pdfRag'}
+
+    llm = await get_llm_model('router')
 
     prompt = f"""
-You are an agent router.
+You are a router agent.
 
-Available agents:
-
-- chat
-- search
-- coding
-- pdf
-- ppt
-- vision
-- website
-
-Rules:
+Select ONE agent for the prompt:
 
 chat:
-General conversation,
-explanations,
-learning,
-questions.
+General conversation, QA, coding advice, basic explanations.
 
 search:
-Current events,
-latest information,
-news,
-recent developments,
-internet lookup.
+Latest news, current facts, weather, live info.
 
 coding:
-Generate code,
-debug code,
-review code,
-explain code,
-optimize code,
-API design.
+Write complete code files, software projects, debugging, multi-file code.
 
 pdf:
-Questions about uploaded PDF
-or document context.
+Generate PDF documents, reports, resume.
 
 ppt:
-Questions about generating presentations
-or presentation context.
+Generate slide presentations, PowerPoint.
 
 vision:
-Generate images,
-create images.
+Generate images, AI art, diagrams, DALL-E, flux, stable diffusion, draw pictures, create images.
 
 website:
-Build websites,
-generate landing pages,
-HTML/CSS components.
+Build websites, generate landing pages, HTML/CSS components.
 
 Return ONLY one word:
 
@@ -109,7 +91,7 @@ User Query:
 """
 
     response = await llm.ainvoke(prompt)
-    agent = response.content.strip().lower()
+    agent = extract_text(response.content).strip().lower()
     valid_agents = {
         "chat",
         "search",

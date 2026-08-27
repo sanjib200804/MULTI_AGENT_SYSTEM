@@ -10,7 +10,7 @@ async def deduct_credits(user_id : str, agent : str):
         if not auth_service:
             raise ValueError("AUTH_SERVICE is not configured")
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.get(
                 f"{auth_service}/auth/get_message/{user_id}/{agent}"
             )

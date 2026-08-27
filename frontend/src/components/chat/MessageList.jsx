@@ -42,12 +42,12 @@ export default function MessageList({
             >
               {isUser ? (
                 /* User Message Pill */
-                <div className="rounded-xl bg-slate-900 text-white dark:bg-slate-800 px-4 py-2.5 text-xs sm:text-sm whitespace-pre-wrap leading-relaxed shadow-sm">
+                <div className="rounded-xl bg-slate-900 text-white dark:bg-slate-800 px-4 py-2.5 text-sm sm:text-[15px] whitespace-pre-wrap leading-relaxed shadow-sm">
                   {text}
                 </div>
               ) : (
                 /* Assistant Message Body */
-                <div className="w-full text-xs sm:text-sm text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
+                <div className="w-full text-sm sm:text-[15px] text-slate-800 dark:text-slate-200 leading-relaxed font-normal">
                   <MarkdownMessage content={text} isUser={false} />
 
                   {/* Returned Images Grid */}

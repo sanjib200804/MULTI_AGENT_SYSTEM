@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     COOKIE_SAMESITE: str = "lax"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=(".env", ".env.example"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",

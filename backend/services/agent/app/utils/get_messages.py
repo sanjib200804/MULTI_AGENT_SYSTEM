@@ -12,7 +12,7 @@ async def get_messages(conversation_id: str):
         if not chat_service:
             raise ValueError("CHAT_SERVICE is not configured")
 
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=30.0) as client:
             response = await client.get(
                 f"{chat_service}/chat/get-messages/{conversation_id}"
             )
