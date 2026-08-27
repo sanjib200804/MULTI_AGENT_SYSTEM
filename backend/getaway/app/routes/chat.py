@@ -132,7 +132,7 @@ async def proxy_chat(path: str, request: Request):
             response_headers[key] = value
 
     return Response(
-        content=response.content,
-        status_code=response.status_code,
-        headers=response_headers
-    )
+    content=response.content,
+    status_code=response.status_code,
+    headers=dict(response.headers)
+)
