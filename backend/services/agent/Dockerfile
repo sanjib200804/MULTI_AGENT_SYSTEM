@@ -2,14 +2,11 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY services/agent/requirements.txt ./requirements.txt
+COPY backend/services/agent/requirements.txt ./requirements.txt
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY shared ./shared
+COPY backend/shared ./shared
+COPY backend/services/agent/app ./app
 
-COPY services/agent/app ./app
-
-EXPOSE 8003
-
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8003}"]
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
