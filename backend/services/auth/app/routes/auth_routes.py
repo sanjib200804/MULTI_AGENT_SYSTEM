@@ -95,16 +95,54 @@ async def get_me(
     return current_user
 
 
+
+# @route.post("/refresh")
+# async def refresh_token(
+#     request: Request,
+#     response: Response,
+#     db: Session = Depends(get_db)
+# ):
+#     refresh_token = request.cookies.get("refresh_token")
+#     if not refresh_token:
+#         from fastapi import HTTPException
+#         raise HTTPException(status_code=401, detail="Refresh token required")
+
+#     service = AuthServices(db)
+#     result = await service.refresh_access_token(refresh_token)
+
+#     response.set_cookie(
+#         key="access_token",
+#         value=result["access_token"],
+#         httponly=True,
+#         secure=settings.COOKIE_SECURE,
+#         samesite=settings.COOKIE_SAMESITE,
+#         max_age=15 * 60,
+#         path="/"
+#     )
+
+#     return {"status": "success", "user": result["user"]}
+
+
+
+
 @route.post("/refresh")
 async def refresh_token(
     request: Request,
     response: Response,
     db: Session = Depends(get_db)
 ):
+    print("=== REFRESH DEBUG ===")
+    print("Cookies received:", request.cookies)
+    print("Refresh token:", request.cookies.get("refresh_token"))
+
     refresh_token = request.cookies.get("refresh_token")
+
     if not refresh_token:
         from fastapi import HTTPException
-        raise HTTPException(status_code=401, detail="Refresh token required")
+        raise HTTPException(
+            status_code=401,
+            detail="Refresh token required"
+        )
 
     service = AuthServices(db)
     result = await service.refresh_access_token(refresh_token)
@@ -119,8 +157,10 @@ async def refresh_token(
         path="/"
     )
 
-    return {"status": "success", "user": result["user"]}
-
+    return {
+        "status": "success",
+        "user": result["user"]
+    }
 from uuid import UUID
 
 @route.get("/get_message/{user_id}/{agent}")
