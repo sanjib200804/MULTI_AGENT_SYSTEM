@@ -21,7 +21,7 @@ mistral = ChatMistralAI(
 
 async def get_llm_model(agent: str):
     if 'chat' in agent:
-        return mistral
+        return gemini
     elif 'search' in agent:
         return gemini
     elif 'coding' in agent or 'website' in agent:
