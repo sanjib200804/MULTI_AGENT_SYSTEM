@@ -21,10 +21,10 @@ mistral = ChatMistralAI(
 
 async def get_llm_model(agent: str):
     if 'chat' in agent:
-        return gemini
+        return mistral
     elif 'search' in agent:
         return gemini
     elif 'coding' in agent or 'website' in agent:
-        return gemini
+        return groq
     else:
-        return gemini
+        return groq
