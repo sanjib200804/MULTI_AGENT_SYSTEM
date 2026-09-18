@@ -90,8 +90,27 @@ User Query:
 {state.get('prompt')}
 """
 
-    response = await llm.ainvoke(prompt)
-    agent = extract_text(response.content).strip().lower()
+    try:
+        response = await llm.ainvoke(prompt)
+        agent = extract_text(response.content).strip().lower()
+    except Exception as err:
+        print(f"Router LLM invoke error: {err}. Using heuristic keyword routing fallback.")
+        user_prompt = str(state.get('prompt') or "").lower()
+        if any(k in user_prompt for k in ["search", "google", "weather", "news", "current", "latest"]):
+            agent = "search"
+        elif any(k in user_prompt for k in ["code", "python", "javascript", "script", "debug", "function", "class", "fix bug"]):
+            agent = "coding"
+        elif any(k in user_prompt for k in ["website", "landing page", "html", "css", "portfolio"]):
+            agent = "website"
+        elif any(k in user_prompt for k in ["pdf", "resume", "cv", "report"]):
+            agent = "pdf"
+        elif any(k in user_prompt for k in ["ppt", "presentation", "slides", "powerpoint"]):
+            agent = "ppt"
+        elif any(k in user_prompt for k in ["image", "picture", "photo", "art", "draw"]):
+            agent = "vision"
+        else:
+            agent = "chat"
+
     valid_agents = {
         "chat",
         "search",
@@ -109,3 +128,4 @@ User Query:
         **state,
         "agent": agent
     }
+

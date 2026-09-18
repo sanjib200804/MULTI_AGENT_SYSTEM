@@ -68,17 +68,37 @@ async def agent(
                 "content_type": file.content_type
             }
 
-        result = await graph.ainvoke({
-            "prompt": prompt,
-            "conversation_id": conversation_id,
-            "agent": selected_agent,
-            "user_id": user_id,
-            "file": file_dict
-        })
-
-        print("result:", result)
-
-        ai_text = _extract_text(result.get("ai_response", ""))
+        try:
+            result = await graph.ainvoke({
+                "prompt": prompt,
+                "conversation_id": conversation_id,
+                "agent": selected_agent,
+                "user_id": user_id,
+                "file": file_dict
+            })
+            print("result:", result)
+            ai_text = _extract_text(result.get("ai_response", ""))
+            images = result.get("images", [])
+            artifacts = result.get("artifacts", [])
+        except Exception as graph_err:
+            print(f"Agent Controller Error: {graph_err}")
+            err_str = str(graph_err)
+            if any(k in err_str for k in ["UNAUTHENTICATED", "401", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "Invalid API Key"]):
+                ai_text = (
+                    "⚠️ **Authentication Failed (401 UNAUTHENTICATED)**\n\n"
+                    "The LLM provider rejected the request because the current `GOOGLE_API_KEY` is invalid or unsupported.\n\n"
+                    "**To resolve this:**\n"
+                    "1. Visit [Google AI Studio](https://aistudio.google.com/app/apikey) and create an API key (starts with `AIzaSy...`).\n"
+                    "2. Open `backend/services/agent/.env` and replace `GOOGLE_API_KEY` with your valid key:\n"
+                    "   ```env\n"
+                    "   GOOGLE_API_KEY=AIzaSyYourGeneratedKeyHere...\n"
+                    "   ```\n"
+                    "3. Save the file and submit your message again."
+                )
+            else:
+                ai_text = f"⚠️ **Agent Execution Error**: {err_str}"
+            images = []
+            artifacts = []
 
         await add_message(
             conversation_id,
@@ -92,32 +112,32 @@ async def agent(
             ai_text
         )
 
-        async with httpx.AsyncClient(timeout=30.0) as client:
-
-            response = await client.post(
-                f"{settings.CHAT_SERVICE}/chat/save-message",
-                json={
-                    "conversationId": conversation_id,
-                    "role": "assistant",
-                    "content": ai_text,
-                    "images": result.get("images", []),
-                    "artifacts": result.get("artifacts", [])
-                }
-            )
-
-            response.raise_for_status()
+        try:
+            async with httpx.AsyncClient(timeout=30.0) as client:
+                response = await client.post(
+                    f"{settings.CHAT_SERVICE}/chat/save-message",
+                    json={
+                        "conversationId": conversation_id,
+                        "role": "assistant",
+                        "content": ai_text,
+                        "images": images,
+                        "artifacts": artifacts
+                    }
+                )
+                response.raise_for_status()
+        except Exception as save_err:
+            print(f"Warning: Failed to save assistant message to chat-service: {save_err}")
 
         return {
             "answer": ai_text,
-            "images": result.get("images", []),
-            "artifacts": result.get("artifacts", [])
+            "images": images,
+            "artifacts": artifacts
         }
 
     except Exception as error:
-
-        print(f"Agent Controller Error: {error}")
-
+        print(f"Agent Service Unhandled Error: {error}")
         raise
+
 
     finally:
         if file_dict and "path" in file_dict:

@@ -5,14 +5,12 @@ import Chat from './pages/Chat'
 import NavBar from './components/NavBar'
 import LenisScroll from './components/LenisScroll'
 import AuthModal from './components/AuthModal'
-import PricingModal from './components/PricingModal'
 
 const App = () => {
   return (
     <>
       <LenisScroll />
       <AuthModal />
-      <PricingModal />
       <NavBar />
       <Routes>
         <Route path="/" element={<Home />} />

@@ -93,7 +93,7 @@ export default function MarkdownMessage({ content, isUser }) {
                     code: ({ inline, className, children }) => {
                         if (inline) {
                             return (
-                                <code className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-purple-600 dark:text-purple-300 font-mono text-xs sm:text-[13px] border border-slate-200 dark:border-slate-700">
+                                <code className="px-1.5 py-0.5 rounded-md bg-[#201538] text-purple-200 font-mono text-xs sm:text-[13px] border border-purple-500/30">
                                     {children}
                                 </code>
                             );
@@ -105,16 +105,16 @@ export default function MarkdownMessage({ content, isUser }) {
                         const rawText = extractRawText(children);
 
                         return (
-                            <div className="my-3.5 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-lg">
+                            <div className="my-3.5 rounded-xl overflow-hidden border border-purple-500/25 shadow-[0_4px_25px_rgba(0,0,0,0.5),0_0_20px_rgba(168,85,247,0.12)]">
                                 {/* Language label bar */}
-                                <div className="flex items-center justify-between px-4 py-2 bg-[#21252b] border-b border-slate-700/50">
-                                    <span className="text-[11px] font-bold text-purple-400 uppercase tracking-wider">
+                                <div className="flex items-center justify-between px-4 py-2 bg-[#1a142c] border-b border-purple-500/20">
+                                    <span className="text-[11px] font-bold text-purple-300 uppercase tracking-wider">
                                         {lang || "code"}
                                     </span>
                                     <CopyCodeButton text={rawText} />
                                 </div>
                                 {/* Code body with syntax highlighting colors */}
-                                <pre className="overflow-x-auto p-4 bg-[#282c34] text-slate-100 text-xs sm:text-sm font-mono leading-6 whitespace-pre">
+                                <pre className="overflow-x-auto p-4 bg-[#100c1e] text-purple-100/90 text-xs sm:text-sm font-mono leading-6 whitespace-pre custom-scrollbar">
                                     <code className={className}>{children}</code>
                                 </pre>
                             </div>
@@ -126,28 +126,28 @@ export default function MarkdownMessage({ content, isUser }) {
 
                     // ── Blockquote ───────────────────────────────────────────
                     blockquote: ({ children }) => (
-                        <blockquote className="my-3 pl-3.5 border-l-2 border-purple-400 dark:border-purple-500 text-slate-500 dark:text-slate-400 italic">
+                        <blockquote className="my-3 pl-3.5 pr-3 py-1.5 border-l-2 border-purple-400 bg-purple-950/20 rounded-r-lg text-purple-200/90 italic">
                             {children}
                         </blockquote>
                     ),
 
                     // ── Table ────────────────────────────────────────────────
                     table: ({ children }) => (
-                        <div className="my-3 overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800">
+                        <div className="my-3 overflow-x-auto rounded-xl border border-purple-500/20 shadow-sm">
                             <table className="w-full text-xs sm:text-sm">{children}</table>
                         </div>
                     ),
                     thead: ({ children }) => (
-                        <thead className="bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 font-semibold">
+                        <thead className="bg-[#18122c] text-purple-200 font-semibold border-b border-purple-500/20">
                             {children}
                         </thead>
                     ),
                     tbody: ({ children }) => (
-                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                        <tbody className="divide-y divide-purple-500/15 bg-[#120d22]/50">
                             {children}
                         </tbody>
                     ),
-                    tr: ({ children }) => <tr className="hover:bg-slate-50 dark:hover:bg-slate-900/40">{children}</tr>,
+                    tr: ({ children }) => <tr className="hover:bg-purple-950/30 transition-colors">{children}</tr>,
                     th: ({ children }) => (
                         <th className="px-3 py-2 text-left font-semibold">{children}</th>
                     ),

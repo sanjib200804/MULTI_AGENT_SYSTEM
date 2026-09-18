@@ -24,27 +24,308 @@ button {
 
 /* Background Grid Pattern */
 .bg-grid-mesh {
-    background-size: 32px 32px;
+    background-size: 40px 40px;
     background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
 }
 
 .bg-grid-mesh-light {
-    background-size: 32px 32px;
+    background-size: 40px 40px;
     background-image: 
-        linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+        linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+}
+
+/* Perspective Wireframe Grid (Neon Palette Reference) */
+.bg-perspective-grid {
+    background-size: 48px 48px;
+    background-image: 
+        linear-gradient(to right, rgba(236, 72, 153, 0.08) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(168, 85, 247, 0.08) 1px, transparent 1px);
+    mask-image: radial-gradient(ellipse at 40% 30%, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 75%);
+    -webkit-mask-image: radial-gradient(ellipse at 40% 30%, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 75%);
+}
+
+/* Celestial Light Beam */
+.celestial-beam {
+    background: linear-gradient(
+        135deg,
+        rgba(139, 92, 246, 0) 0%,
+        rgba(168, 85, 247, 0.16) 30%,
+        rgba(236, 72, 153, 0.35) 60%,
+        rgba(244, 63, 94, 0.52) 85%,
+        rgba(255, 255, 255, 0.7) 100%
+    );
+    filter: blur(40px);
+}
+
+/* Planet Horizon Curve Rim Glow */
+.planet-horizon-glow {
+    box-shadow: 
+        0 -12px 65px 6px rgba(244, 63, 94, 0.75),
+        0 -28px 125px 22px rgba(236, 72, 153, 0.55),
+        0 -60px 190px 45px rgba(168, 85, 247, 0.35);
+}
+
+/* Metallic Text Gradient */
+.text-metallic {
+    background: linear-gradient(180deg, #FFFFFF 20%, #CBD5E1 70%, #94A3B8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.text-glow-blue {
+    text-shadow: 0 0 35px rgba(59, 130, 246, 0.5);
 }
 
 /* Glass & Surface Utilities */
 .glass-panel {
-    @apply bg-white/80 dark:bg-[#121215]/80 backdrop-blur-md border border-slate-200/80 dark:border-white/[0.08] shadow-sm;
+    @apply bg-white/80 dark:bg-[#0c101d]/75 backdrop-blur-xl border border-slate-200/80 dark:border-white/[0.08] shadow-sm;
 }
 
 .glass-card-hover {
-    @apply transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md;
+    @apply transition-all duration-300 hover:border-blue-500/40 hover:bg-white/[0.05] hover:shadow-[0_0_25px_rgba(37,99,235,0.15)];
 }
+
+/* Reference Design Card Aesthetics V2 (https://i.pinimg.com/736x/e5/41/cc/e541ccf6e73b1099a2d188839b74fb1e.jpg) */
+/* Signature: Vibrant Magenta/Pink-to-Violet Neon Halo Border, Deep Plum Glass, Sleek Connect Controls */
+.ref-card {
+    background: linear-gradient(
+        145deg, 
+        rgba(30, 16, 48, 0.72) 0%, 
+        rgba(15, 9, 26, 0.82) 48%, 
+        rgba(24, 13, 42, 0.88) 100%
+    );
+    backdrop-filter: blur(32px) saturate(220%);
+    -webkit-backdrop-filter: blur(32px) saturate(220%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+        inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.28),
+        inset 0 0 20px 0 rgba(236, 72, 153, 0.05),
+        0 25px 60px -15px rgba(0, 0, 0, 0.85),
+        -6px -6px 36px -4px rgba(244, 63, 94, 0.38),
+        8px 8px 40px -4px rgba(168, 85, 247, 0.45);
+    border-radius: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ref-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 28px;
+    padding: 1.5px;
+    background: linear-gradient(
+        135deg, 
+        rgba(244, 63, 94, 0.95) 0%, 
+        rgba(236, 72, 153, 0.6) 28%, 
+        rgba(139, 92, 246, 0.4) 65%, 
+        rgba(168, 85, 247, 0.95) 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.ref-card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0%, transparent 100%);
+    pointer-events: none;
+    border-radius: 28px 28px 0 0;
+}
+
+.ref-card:hover {
+    background: linear-gradient(
+        145deg, 
+        rgba(38, 20, 60, 0.78) 0%, 
+        rgba(20, 11, 35, 0.88) 48%, 
+        rgba(30, 16, 52, 0.94) 100%
+    );
+    box-shadow: 
+        inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.38),
+        0 30px 70px -15px rgba(0, 0, 0, 0.95),
+        -8px -8px 45px 0 rgba(244, 63, 94, 0.58),
+        12px 12px 50px 0 rgba(168, 85, 247, 0.68);
+    transform: translateY(-5px);
+}
+
+.ref-beveled-icon {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.22),
+        0 8px 20px -6px rgba(0, 0, 0, 0.6);
+    border-radius: 16px;
+}
+
+.ref-beveled-subcard {
+    background: rgba(255, 255, 255, 0.028);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ref-beveled-subcard:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(236, 72, 153, 0.3);
+}
+
+/* Connect Action Pill Button (Exact match from reference image) */
+.ref-connect-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.375rem 0.95rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.75rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.ref-connect-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(236, 72, 153, 0.4);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(236, 72, 153, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+}
+
+/* Primary Button (Exact match to "Save changes" pure white pill button in reference image) */
+.ref-primary-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.85rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #030712;
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.22), 0 0 35px rgba(236, 72, 153, 0.25);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+}
+
+.ref-primary-btn:hover {
+    background: #f8fafc;
+    box-shadow: 0 6px 28px rgba(255, 255, 255, 0.35), 0 0 45px rgba(236, 72, 153, 0.45);
+    transform: scale(1.015);
+}
+
+.ref-primary-btn:active {
+    transform: scale(0.99);
+}
+
+/* Diagonal Diamond Grid Mesh (Exact match from reference image background) */
+.bg-diamond-mesh {
+    background-image: 
+        repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.015) 0, rgba(255, 255, 255, 0.015) 1px, transparent 0, transparent 32px),
+        repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.015) 0, rgba(255, 255, 255, 0.015) 1px, transparent 0, transparent 32px);
+}
+
+/* Radiant Cosmic Glow Utilities */
+.glow-cyan {
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.45), 0 0 50px rgba(6, 182, 212, 0.2);
+}
+
+.glow-blue {
+    box-shadow: 0 0 30px rgba(37, 99, 235, 0.5), 0 0 60px rgba(37, 99, 235, 0.25);
+}
+
+.glow-purple {
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.45), 0 0 60px rgba(168, 85, 247, 0.2);
+}
+
+.glow-magenta {
+    box-shadow: 0 0 30px rgba(236, 72, 153, 0.45), 0 0 60px rgba(236, 72, 153, 0.2);
+}
+
+.glow-amber {
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.45), 0 0 50px rgba(245, 158, 11, 0.2);
+}
+
+.glow-emerald {
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.45), 0 0 50px rgba(16, 185, 129, 0.2);
+}
+
+.text-glow-cyan {
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.6), 0 0 40px rgba(6, 182, 212, 0.3);
+}
+
+.text-glow-blue {
+    text-shadow: 0 0 25px rgba(59, 130, 246, 0.6), 0 0 50px rgba(59, 130, 246, 0.3);
+}
+
+.text-glow-purple {
+    text-shadow: 0 0 25px rgba(168, 85, 247, 0.6), 0 0 50px rgba(168, 85, 247, 0.3);
+}
+
+/* Pulsing ambient aura keyframes */
+@keyframes pulseAura {
+    0%, 100% {
+        opacity: 0.55;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.85;
+        transform: scale(1.08);
+    }
+}
+
+.animate-pulse-aura {
+    animation: pulseAura 8s ease-in-out infinite;
+}
+
+/* Floating Animations */
+@keyframes floatParticle {
+    0%, 100% {
+        transform: translateY(0px) translateX(0px);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(-18px) translateX(8px);
+        opacity: 0.9;
+    }
+}
+
+.animate-float-particle {
+    animation: floatParticle 6s ease-in-out infinite;
+}
+
+@keyframes floatOrb {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-8px) scale(1.03);
+    }
+}
+
+.animate-float-orb {
+    animation: floatOrb 5s ease-in-out infinite;
+}
+
 
 /* Custom Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {

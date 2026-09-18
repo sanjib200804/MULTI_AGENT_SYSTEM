@@ -1,3 +1,4 @@
+import os
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -6,17 +7,17 @@ from langchain_mistralai import ChatMistralAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 groq = ChatGroq(
-    model="openai/gpt-oss-120b",
+    model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
     max_tokens=8192
 )
 
 gemini = ChatGoogleGenerativeAI(
-    model="gemini-3.6-flash",
+    model=os.getenv("GEMINI_MODEL", "gemini-3.6-flash"),
     max_output_tokens=8192
 )
 
 mistral = ChatMistralAI(
-    model="mistral-small-2506"
+    model=os.getenv("MISTRAL_MODEL", "mistral-small-latest")
 )
 
 async def get_llm_model(agent: str):
@@ -28,3 +29,4 @@ async def get_llm_model(agent: str):
         return gemini
     else:
         return gemini
+

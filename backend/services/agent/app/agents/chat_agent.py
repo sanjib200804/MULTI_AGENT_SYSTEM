@@ -99,8 +99,24 @@ Formatting:
 
     except Exception as error:
         print(f"Chat agent error: {error}")
+        err_str = str(error)
+        if any(k in err_str for k in ["UNAUTHENTICATED", "401", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "Invalid API Key"]):
+            msg = (
+                "⚠️ **Authentication Failed (401 UNAUTHENTICATED)**\n\n"
+                "Google Gemini rejected the API key configured in `backend/services/agent/.env`.\n\n"
+                "**How to fix:**\n"
+                "1. Generate an API key at [Google AI Studio](https://aistudio.google.com/app/apikey) (key format starts with `AIzaSy...`).\n"
+                "2. Open `backend/services/agent/.env` and update:\n"
+                "   ```env\n"
+                "   GOOGLE_API_KEY=AIzaSy...\n"
+                "   ```\n"
+                "3. Save the file and retry your prompt."
+            )
+        else:
+            msg = f"Failed to generate chat: {err_str}"
 
         return {
             **state,
-            "ai_response": "Failed to generate chat"
+            "ai_response": msg
         }
+

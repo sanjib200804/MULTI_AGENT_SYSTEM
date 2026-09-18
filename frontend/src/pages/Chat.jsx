@@ -4,7 +4,7 @@ import { useAuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import api from "../utils/axiosIntences";
-import { Sparkles, Menu } from "lucide-react";
+import { Sparkles, Menu, PanelLeft } from "lucide-react";
 import ChatWelcome from "../components/chat/ChatWelcome";
 import MessageList from "../components/chat/MessageList";
 import ChatInputDock from "../components/chat/ChatInputDock";
@@ -13,7 +13,7 @@ export default function Chat() {
     const { user, loading, logout, setIsAuthModalOpen, refetchUser } = useAuthContext();
     const navigate = useNavigate();
 
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(typeof window !== "undefined" ? window.innerWidth >= 768 : true);
     const [inputMessage, setInputMessage] = useState("");
     const [isThinking, setIsThinking] = useState(false);
     const [copiedId, setCopiedId] = useState(null);
@@ -112,12 +112,12 @@ export default function Chat() {
 
     if (loading) {
         return (
-            <div className="flex h-screen w-screen items-center justify-center bg-white dark:bg-[#09090b] text-slate-800 dark:text-white">
+            <div className="flex h-screen w-screen items-center justify-center bg-[#0a0715] text-white">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="relative flex size-12 items-center justify-center rounded-xl bg-purple-600 shadow-sm">
+                    <div className="relative flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-600 shadow-[0_0_25px_rgba(168,85,247,0.5)] border border-purple-400/30">
                         <Sparkles size={24} className="animate-spin text-white" />
                     </div>
-                    <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 tracking-widest uppercase animate-pulse">
+                    <p className="text-xs font-semibold text-purple-300/80 tracking-widest uppercase animate-pulse">
                         Initializing Agentra AI…
                     </p>
                 </div>
@@ -210,6 +210,7 @@ export default function Chat() {
 
         const fileToSend = selectedFile;
         setSelectedFile(null);
+        if (fileInputRef.current) fileInputRef.current.value = "";
 
         try {
             const formData = new FormData();
@@ -254,7 +255,7 @@ export default function Chat() {
     const userInitials = (user.fullname || user.displayName || "U").slice(0, 1).toUpperCase();
 
     return (
-        <div className="flex h-screen w-screen bg-slate-50 dark:bg-[#09090b] text-slate-800 dark:text-slate-100 font-sans overflow-hidden pt-16 selection:bg-purple-500/20">
+        <div className="flex h-screen w-screen bg-[#0a0715] text-slate-100 font-sans overflow-hidden pt-16 selection:bg-purple-500/30">
 
             {/* Sidebar component */}
             <Sidebar
@@ -270,16 +271,22 @@ export default function Chat() {
             />
 
             {/* MAIN CONTENT AREA */}
-            <main className="relative flex flex-1 flex-col h-full overflow-hidden bg-slate-50/50 dark:bg-[#09090b]">
+            <main className="relative flex flex-1 flex-col h-full overflow-hidden bg-[#0d0a1a] bg-gradient-to-b from-[#120d26] via-[#0d0a1a] to-[#0a0715]">
 
-                {/* Mobile floating sidebar menu button */}
-                <button
-                    onClick={() => setSidebarOpen(true)}
-                    className="fixed top-20 left-4 z-30 p-2 rounded-xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/10 text-slate-600 dark:text-slate-300 shadow-md backdrop-blur-md md:hidden cursor-pointer"
-                    title="Open Sidebar"
-                >
-                    <Menu size={18} />
-                </button>
+                {/* Ambient cosmic lighting in viewport */}
+                <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-purple-900/15 blur-[140px] pointer-events-none rounded-full" />
+                <div className="absolute bottom-28 right-12 w-[350px] h-[250px] bg-fuchsia-950/10 blur-[120px] pointer-events-none rounded-full" />
+
+                {/* Floating sidebar open button (visible whenever sidebar is hidden) */}
+                {!sidebarOpen && (
+                    <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="fixed top-20 left-4 z-30 p-2 rounded-xl bg-[#161226]/90 border border-purple-500/35 text-purple-200 hover:text-white hover:border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.25)] backdrop-blur-md transition cursor-pointer"
+                        title="Open Sidebar"
+                    >
+                        <PanelLeft size={18} />
+                    </button>
+                )}
 
                 {/* Message Viewport */}
                 <div className="flex-1 overflow-y-auto custom-scrollbar">
