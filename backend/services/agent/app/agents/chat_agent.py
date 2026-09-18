@@ -100,17 +100,15 @@ Formatting:
     except Exception as error:
         print(f"Chat agent error: {error}")
         err_str = str(error)
-        if any(k in err_str for k in ["UNAUTHENTICATED", "401", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "Invalid API Key"]):
+        if any(k in err_str for k in ["UNAUTHENTICATED", "401", "ACCESS_TOKEN_TYPE_UNSUPPORTED", "Invalid API Key", "Unauthorized", "unauthorized"]):
             msg = (
-                "⚠️ **Authentication Failed (401 UNAUTHENTICATED)**\n\n"
-                "Google Gemini rejected the API key configured in `backend/services/agent/.env`.\n\n"
+                "⚠️ **Authentication Failed (401)**\n\n"
+                f"An LLM API key is invalid or expired. Error: `{err_str}`\n\n"
                 "**How to fix:**\n"
-                "1. Generate an API key at [Google AI Studio](https://aistudio.google.com/app/apikey) (key format starts with `AIzaSy...`).\n"
-                "2. Open `backend/services/agent/.env` and update:\n"
-                "   ```env\n"
-                "   GOOGLE_API_KEY=AIzaSy...\n"
-                "   ```\n"
-                "3. Save the file and retry your prompt."
+                "- **Mistral** (used by chat agent): Get a key at [console.mistral.ai](https://console.mistral.ai/api-keys)\n"
+                "- **Groq** (used by coding/website agents): Get a key at [console.groq.com](https://console.groq.com/keys)\n"
+                "- **Google Gemini** (used by search agent): Get a key at [aistudio.google.com](https://aistudio.google.com/app/apikey) (starts with `AIzaSy...`)\n\n"
+                "Update `backend/services/agent/.env` with the correct key and restart the agent service."
             )
         else:
             msg = f"Failed to generate chat: {err_str}"

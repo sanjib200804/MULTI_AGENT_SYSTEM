@@ -12,20 +12,22 @@ groq = ChatGroq(
 )
 
 gemini = ChatGoogleGenerativeAI(
-    model=os.getenv("GEMINI_MODEL", "gemini-3.6-flash"),
+    model=os.getenv("GEMINI_MODEL", "gemini-3.5-flash"),
     max_output_tokens=8192
 )
 
 mistral = ChatMistralAI(
-    model=os.getenv("MISTRAL_MODEL", "mistral-small-latest")
+
+    model=os.getenv("MISTRAL_MODEL", "mistral-small-2506"),
+    api_key= os.getenv('MISTRAL_API_KEY')
 )
 
 async def get_llm_model(agent: str):
     if 'chat' in agent:
-        return mistral
+        return gemini
     elif 'search' in agent:
         return gemini
     elif 'coding' in agent or 'website' in agent:
-        return groq
+        return gemini
     else:
         return gemini

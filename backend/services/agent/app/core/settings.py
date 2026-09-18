@@ -6,6 +6,7 @@ class Settings(BaseSettings):
 
        GROQ_API_KEY :str
        MISTRAL_API_KEY :str
+       GOOGLE_API_KEY :str
        CHAT_SERVICE :str
        REDIS_URL :str = "redis://localhost:6379"
        AUTH_SERVICE :str
