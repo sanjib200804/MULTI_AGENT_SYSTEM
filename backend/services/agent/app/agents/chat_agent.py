@@ -43,7 +43,7 @@ Answer the user using only the above search results.
 """
 
         system_prompt = f"""
-You are CortexAI, a helpful, intelligent, and thorough AI assistant.
+You are AgentraAI, a helpful, intelligent, and thorough AI assistant.
 
 {search_context}
 

@@ -37,7 +37,7 @@ async def website_builder(state: AgentState):
         llm = await get_llm_model("website")
 
         prompt = f"""
-You are CortexAI Website Builder.
+You are AgentraAI Website Builder.
 
 Generate a complete, fully functional, responsive website for the user's request.
 

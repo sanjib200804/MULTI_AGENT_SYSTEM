@@ -55,7 +55,7 @@ async def image_analyzer(state: AgentState):
 
             SystemMessage(
                 content="""
-You are CortexAI Image Analyzer Agent.
+You are AgentraAI Image Analyzer Agent.
 
 Rules:
 
