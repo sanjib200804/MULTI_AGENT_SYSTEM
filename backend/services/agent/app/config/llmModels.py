@@ -19,7 +19,7 @@ gemini = ChatGoogleGenerativeAI(
 mistral = ChatMistralAI(
 
     model=os.getenv("MISTRAL_MODEL", "mistral-small-2506"),
-    api_key= os.getenv('MISTRAL_API_KEY')
+   
 )
 
 async def get_llm_model(agent: str):
