@@ -45,27 +45,21 @@ export default function WhyAgentra() {
       
       {/* Top Section Intro */}
       <div className="text-center max-w-3xl mx-auto mb-16">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 text-[11px] font-semibold tracking-wider uppercase mb-3 shadow-[0_0_20px_rgba(6,182,212,0.35)]">
-          <Layers size={13} className="text-cyan-400" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-black/10 dark:border-white/20 bg-black/[0.04] dark:bg-white/[0.05] text-slate-700 dark:text-zinc-300 text-[11px] font-semibold tracking-wider uppercase mb-3 shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+          <Layers size={13} className="text-slate-600 dark:text-zinc-300" />
           <span>Under the Hood</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-          Engineered for <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(6,182,212,0.4)]">Enterprise Workloads</span>
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Engineered for <span className="bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-zinc-200 dark:to-zinc-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.25)]">Enterprise Workloads</span>
         </h2>
-        <p className="mt-4 text-slate-400 text-sm md:text-base leading-relaxed">
+        <p className="mt-4 text-slate-600 dark:text-zinc-400 text-sm md:text-base leading-relaxed">
           Agentra replaces slow, fragile monolithic AI scripts with an industrial-grade microservice architecture coordinated by stateful LangGraph pipelines.
         </p>
       </div>
 
-      {/* Ambient Cosmic Lights passing directly behind transparent cards */}
-      <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden" aria-hidden="true">
-        <div className="absolute top-1/3 -right-20 w-[550px] h-[550px] rounded-full bg-blue-600/15 blur-[160px]" />
-        <div className="absolute bottom-1/4 -left-20 w-[600px] h-[600px] rounded-full bg-cyan-500/15 blur-[150px]" />
-      </div>
-
       <div className="grid items-center gap-12 lg:grid-cols-12 relative">
         
-        {/* Left Side: Core Architectural Pillars with Reference Card Style (6 cols) */}
+        {/* Left Side: Core Architectural Pillars with Monochrome Card Style (6 cols) */}
         <div className="lg:col-span-6 space-y-4">
           {archHighlights.map((item, i) => {
             const Icon = item.icon;
@@ -74,22 +68,22 @@ export default function WhyAgentra() {
                 key={i} 
                 className="ref-card group p-5 sm:p-6 flex gap-4 transition-all duration-300 cursor-pointer"
               >
-                {/* Dual Corner Halos (Hot Pink top-left, Electric Violet bottom-right) */}
-                <div className="absolute -top-10 -left-10 size-36 rounded-full bg-gradient-to-br from-rose-500/30 via-pink-500/15 to-transparent blur-2xl pointer-events-none group-hover:from-rose-500/50 transition-all" />
-                <div className="absolute -bottom-10 -right-10 size-40 rounded-full bg-gradient-to-tl from-purple-600/35 via-violet-600/20 to-transparent blur-2xl pointer-events-none group-hover:from-purple-500/55 transition-all" />
+                {/* Subtle Corner Halos */}
+                <div className="absolute -top-10 -left-10 size-36 rounded-full bg-[#4288BC]/[0.05] dark:bg-white/[0.03] blur-2xl pointer-events-none group-hover:bg-[#4288BC]/[0.1] dark:group-hover:bg-white/[0.06] transition-all" />
+                <div className="absolute -bottom-10 -right-10 size-40 rounded-full bg-[#4288BC]/[0.04] dark:bg-white/[0.02] blur-2xl pointer-events-none group-hover:bg-[#4288BC]/[0.08] dark:group-hover:bg-white/[0.05] transition-all" />
 
-                <div className="relative z-10 flex size-11 shrink-0 items-center justify-center ref-beveled-icon text-pink-300 group-hover:scale-105 transition-transform">
+                <div className="relative z-10 flex size-11 shrink-0 items-center justify-center ref-beveled-icon text-slate-800 dark:text-zinc-200 group-hover:scale-105 transition-transform">
                   <Icon size={20} />
                 </div>
 
                 <div className="relative z-10 flex-1">
                   <div className="flex items-center justify-between gap-2 mb-1">
-                    <h3 className="font-bold text-sm text-white group-hover:text-pink-100 transition-colors">{item.title}</h3>
+                    <h3 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-black dark:group-hover:text-zinc-200 transition-colors">{item.title}</h3>
                     <span className="ref-connect-btn !py-0.5 !px-2.5 !text-[10px]">
                       {item.tag}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300/80 leading-relaxed font-normal">
+                  <p className="text-xs text-slate-600 dark:text-zinc-400 leading-relaxed font-normal">
                     {item.desc}
                   </p>
                 </div>
@@ -98,23 +92,23 @@ export default function WhyAgentra() {
           })}
         </div>
 
-        {/* Right Side: Visualizer Master Card in Reference Style (6 cols) */}
+        {/* Right Side: Visualizer Master Card in Monochrome Style (6 cols) */}
         <div className="lg:col-span-6 ref-card p-7 md:p-8">
-          {/* Dual corner halos matching reference card */}
-          <div className="absolute -top-12 -left-12 size-52 rounded-full bg-gradient-to-br from-rose-500/35 via-pink-500/20 to-transparent blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-14 -right-14 size-64 rounded-full bg-gradient-to-tl from-purple-600/45 via-violet-600/25 to-transparent blur-3xl pointer-events-none" />
+          {/* Dual corner halos */}
+          <div className="absolute -top-12 -left-12 size-52 rounded-full bg-[#4288BC]/[0.05] dark:bg-white/[0.03] blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-14 -right-14 size-64 rounded-full bg-[#4288BC]/[0.04] dark:bg-white/[0.02] blur-3xl pointer-events-none" />
 
           <div className="relative z-10">
             {/* Header with Beveled Bot Icon */}
-            <div className="flex items-center justify-between pb-5 border-b border-white/[0.08]">
+            <div className="flex items-center justify-between pb-5 border-b border-black/[0.08] dark:border-white/[0.08]">
               <div className="flex items-center gap-3.5">
-                <div className="ref-beveled-icon size-11 flex items-center justify-center text-pink-300 shadow-[0_0_15px_rgba(244,63,94,0.35)]">
+                <div className="ref-beveled-icon size-11 flex items-center justify-center text-slate-900 dark:text-white shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.15)]">
                   <Bot size={20} />
                 </div>
                 <div>
-                  <h4 className="font-bold text-sm text-white tracking-tight">LangGraph Runtime Dispatcher</h4>
-                  <p className="text-[10px] text-pink-300 font-mono flex items-center gap-1.5 mt-0.5">
-                    <span className="size-1.5 rounded-full bg-pink-400 shadow-[0_0_8px_#f43f5e] animate-pulse" />
+                  <h4 className="font-bold text-sm text-slate-900 dark:text-white tracking-tight">LangGraph Runtime Dispatcher</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-zinc-400 font-mono flex items-center gap-1.5 mt-0.5">
+                    <span className="size-1.5 rounded-full bg-slate-900 dark:bg-white shadow-sm dark:shadow-[0_0_8px_#ffffff] animate-pulse" />
                     State Graph: GraphExecutionState.ACTIVE
                   </p>
                 </div>
@@ -137,26 +131,26 @@ export default function WhyAgentra() {
                   key={idx} 
                   className={`ref-beveled-subcard flex items-center justify-between gap-3 p-3 text-xs transition-all ${
                     node.status === "Executing"
-                      ? "border-pink-500/50 bg-pink-500/[0.08] shadow-[0_0_20px_rgba(244,63,94,0.2)]"
-                      : "hover:border-white/15"
+                      ? "border-black/30 dark:border-white/40 bg-black/[0.05] dark:bg-white/[0.06] shadow-sm dark:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                      : "hover:border-black/15 dark:hover:border-white/20"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="flex size-6 items-center justify-center rounded-lg bg-white/[0.04] font-mono text-[10px] font-bold text-pink-300 border border-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]">
+                    <div className="flex size-6 items-center justify-center rounded-lg bg-black/[0.05] dark:bg-white/[0.06] font-mono text-[10px] font-bold text-slate-900 dark:text-white border border-black/10 dark:border-white/10 shadow-sm">
                       {node.step}
                     </div>
                     <div>
-                      <span className="text-white font-semibold">{node.name}</span>
-                      <p className="text-[11px] text-slate-400 truncate max-w-[190px] sm:max-w-xs">{node.task}</p>
+                      <span className="text-slate-900 dark:text-white font-semibold">{node.name}</span>
+                      <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate max-w-[190px] sm:max-w-xs">{node.task}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className="hidden sm:inline font-mono text-[10px] text-slate-400">{node.latency}</span>
+                    <span className="hidden sm:inline font-mono text-[10px] text-slate-500 dark:text-zinc-400">{node.latency}</span>
                     <span className={`text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-full ${
-                      node.status === "Complete" ? "bg-emerald-500/15 text-emerald-300 border border-emerald-400/40 shadow-[0_0_10px_rgba(16,185,129,0.3)]" :
-                      node.status === "Executing" ? "bg-pink-500/20 text-pink-200 border border-pink-400/60 shadow-[0_0_15px_rgba(244,63,94,0.5)] animate-pulse" :
-                      "bg-white/[0.02] text-slate-400 border border-white/5"
+                      node.status === "Complete" ? "bg-black/[0.06] dark:bg-white/[0.08] text-slate-800 dark:text-white border border-black/10 dark:border-white/20 shadow-sm dark:shadow-[0_0_10px_rgba(255,255,255,0.1)]" :
+                      node.status === "Executing" ? "bg-black dark:bg-white text-white dark:text-black font-bold border border-black dark:border-white shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.3)] animate-pulse" :
+                      "bg-black/[0.03] dark:bg-white/[0.02] text-slate-500 dark:text-zinc-400 border border-black/5 dark:border-white/5"
                     }`}>
                       {node.status}
                     </span>
@@ -166,26 +160,26 @@ export default function WhyAgentra() {
             </div>
 
             {/* Infrastructure Specs Footer */}
-            <div className="mt-6 pt-5 border-t border-white/[0.08] grid grid-cols-3 gap-2.5 text-center text-[10px] font-mono text-slate-300">
+            <div className="mt-6 pt-5 border-t border-black/[0.08] dark:border-white/[0.08] grid grid-cols-3 gap-2.5 text-center text-[10px] font-mono text-slate-700 dark:text-zinc-300">
               <div className="ref-beveled-subcard p-2.5">
-                <span className="text-pink-400 block font-semibold">DB</span>
-                <strong className="text-white">PostgreSQL 15</strong>
+                <span className="text-slate-500 dark:text-zinc-400 block font-semibold">DB</span>
+                <strong className="text-slate-900 dark:text-white">PostgreSQL 15</strong>
               </div>
               <div className="ref-beveled-subcard p-2.5">
-                <span className="text-purple-400 block font-semibold">Cache</span>
-                <strong className="text-white">Redis Alpine</strong>
+                <span className="text-slate-500 dark:text-zinc-400 block font-semibold">Cache</span>
+                <strong className="text-slate-900 dark:text-white">Redis Alpine</strong>
               </div>
               <div className="ref-beveled-subcard p-2.5">
-                <span className="text-violet-400 block font-semibold">Vector</span>
-                <strong className="text-white">Qdrant Cloud</strong>
+                <span className="text-slate-500 dark:text-zinc-400 block font-semibold">Vector</span>
+                <strong className="text-slate-900 dark:text-white">Qdrant Cloud</strong>
               </div>
             </div>
 
-            {/* Reference Design Primary Button */}
+            {/* Primary Action Button */}
             <div className="mt-5 pt-3">
               <button
                 type="button"
-                className="ref-primary-btn flex items-center justify-center gap-2"
+                className="ref-primary-btn hover:bg-slate-800 dark:hover:bg-zinc-200 text-white dark:text-black font-bold flex items-center justify-center gap-2"
               >
                 <span>Save Dispatcher Configurations</span>
                 <ArrowRight size={14} />

@@ -10,14 +10,14 @@ export const FaqSection = () => {
       
       {/* Section Header */}
       <div className="text-center max-w-2xl mx-auto mb-14">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-cyan-500/40 bg-cyan-500/10 text-cyan-300 text-[11px] font-semibold tracking-wider uppercase mb-3 shadow-[0_0_20px_rgba(6,182,212,0.35)]">
-          <HelpCircle size={13} className="text-cyan-400" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-black/10 dark:border-white/20 bg-black/[0.04] dark:bg-white/[0.05] text-slate-700 dark:text-zinc-300 text-[11px] font-semibold tracking-wider uppercase mb-3 shadow-sm dark:shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+          <HelpCircle size={13} className="text-slate-600 dark:text-zinc-300" />
           <span>Frequently Asked Questions</span>
         </div>
-        <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-          Everything You <span className="bg-gradient-to-r from-cyan-400 via-blue-400 to-indigo-300 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(6,182,212,0.4)]">Need to Know</span>
+        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Everything You <span className="bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 dark:from-white dark:via-zinc-200 dark:to-zinc-400 bg-clip-text text-transparent drop-shadow-sm dark:drop-shadow-[0_0_35px_rgba(255,255,255,0.25)]">Need to Know</span>
         </h2>
-        <p className="mt-3 text-slate-400 text-sm leading-relaxed">
+        <p className="mt-3 text-slate-600 dark:text-zinc-400 text-sm leading-relaxed">
           Detailed answers on our LangGraph orchestration, vector RAG pipelines, quota security, and deployment models.
         </p>
       </div>
@@ -32,15 +32,15 @@ export const FaqSection = () => {
               key={index}
               className={`ref-card transition-all duration-300 ${
                 isOpen
-                  ? "border-cyan-400/50 shadow-[0_0_35px_rgba(6,182,212,0.2),inset_0_1px_1px_rgba(255,255,255,0.18)]"
-                  : "hover:border-white/20"
+                  ? "border-black/25 dark:border-white/30 shadow-md dark:shadow-[0_0_30px_rgba(255,255,255,0.08),inset_0_1px_1px_rgba(255,255,255,0.2)]"
+                  : "hover:border-black/15 dark:hover:border-white/20"
               }`}
             >
               {/* Corner spotlight for active item */}
               {isOpen && (
                 <>
-                  <div className="absolute -top-6 -left-6 size-36 rounded-full bg-gradient-to-br from-rose-500/35 via-pink-500/20 to-transparent blur-2xl pointer-events-none" />
-                  <div className="absolute -bottom-8 -right-8 size-44 rounded-full bg-gradient-to-tl from-purple-600/45 via-violet-600/25 to-transparent blur-2xl pointer-events-none" />
+                  <div className="absolute -top-6 -left-6 size-36 rounded-full bg-[#4288BC]/[0.05] dark:bg-white/[0.03] blur-2xl pointer-events-none" />
+                  <div className="absolute -bottom-8 -right-8 size-44 rounded-full bg-[#4288BC]/[0.04] dark:bg-white/[0.02] blur-2xl pointer-events-none" />
                 </>
               )}
 
@@ -49,22 +49,22 @@ export const FaqSection = () => {
                 className="relative z-10 flex w-full items-center justify-between p-5 md:p-6 text-left cursor-pointer"
               >
                 <h3 className={`text-sm font-semibold tracking-tight transition-colors pr-4 ${
-                  isOpen ? "text-pink-200 drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]" : "text-white"
+                  isOpen ? "text-slate-900 dark:text-white" : "text-slate-700 dark:text-zinc-200"
                 }`}>
                   {faq.question}
                 </h3>
-                <div className="size-8 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center shrink-0">
+                <div className="size-8 rounded-full bg-black/[0.04] dark:bg-white/[0.04] border border-black/10 dark:border-white/[0.08] flex items-center justify-center shrink-0">
                   <ChevronDown
                     size={16}
                     className={`transition-transform duration-300 ${
-                      isOpen ? "rotate-180 text-pink-400 drop-shadow-[0_0_8px_rgba(244,63,94,0.8)]" : "text-slate-400"
+                      isOpen ? "rotate-180 text-slate-900 dark:text-white" : "text-slate-500 dark:text-zinc-400"
                     }`}
                   />
                 </div>
               </button>
 
               {isOpen && (
-                <div className="relative z-10 px-6 pb-6 pt-3 text-xs sm:text-sm leading-relaxed text-slate-300 border-t border-white/[0.06] bg-white/[0.015] backdrop-blur-md font-normal">
+                <div className="relative z-10 px-6 pb-6 pt-3 text-xs sm:text-sm leading-relaxed text-slate-600 dark:text-zinc-300 border-t border-black/[0.06] dark:border-white/[0.06] bg-black/[0.015] dark:bg-white/[0.015] backdrop-blur-md font-normal">
                   {faq.answer}
                 </div>
               )}

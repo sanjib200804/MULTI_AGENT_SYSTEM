@@ -144,18 +144,18 @@ function WebsiteArtifact({ artifact }) {
   };
 
   return (
-    <div className="rounded-2xl border border-purple-500/25 bg-[#141024] shadow-[0_4px_25px_rgba(0,0,0,0.5),0_0_20px_rgba(168,85,247,0.15)] overflow-hidden w-full transition-all">
-      {/* Header Bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#18132b] border-b border-purple-500/20">
+    <div className="rounded-2xl border border-white/15 overflow-hidden shadow-2xl bg-zinc-950 my-4">
+      {/* Artifact Header Toolbar */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-zinc-900/90 border-b border-white/10">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-lg bg-purple-500/15 text-purple-300">
+          <div className="p-1.5 rounded-lg bg-white/[0.08] text-white">
             <Globe size={16} />
           </div>
           <div>
             <h4 className="text-xs font-bold text-white capitalize">
               {artifact.title || "Generated Web Application"}
             </h4>
-            <p className="text-[10px] text-purple-300/70">
+            <p className="text-[10px] text-zinc-400">
               {files.length} {files.length === 1 ? "File" : "Files"} (HTML, CSS, JS)
             </p>
           </div>
@@ -167,8 +167,8 @@ function WebsiteArtifact({ artifact }) {
             onClick={() => setActiveTab("preview")}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
               activeTab === "preview"
-                ? "bg-purple-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
-                : "text-slate-300 hover:text-white hover:bg-white/10"
+                ? "bg-white text-black shadow-sm font-bold"
+                : "text-zinc-300 hover:text-white hover:bg-white/10"
             }`}
           >
             <Eye size={12} />
@@ -179,8 +179,8 @@ function WebsiteArtifact({ artifact }) {
             onClick={() => setActiveTab("code")}
             className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold transition cursor-pointer ${
               activeTab === "code"
-                ? "bg-purple-600 text-white shadow-[0_0_12px_rgba(168,85,247,0.4)]"
-                : "text-slate-300 hover:text-white hover:bg-white/10"
+                ? "bg-white text-black shadow-sm font-bold"
+                : "text-zinc-300 hover:text-white hover:bg-white/10"
             }`}
           >
             <Code size={12} />
@@ -189,7 +189,7 @@ function WebsiteArtifact({ artifact }) {
 
           <button
             onClick={() => setIsFullscreen(true)}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition cursor-pointer"
             title="Full Screen Preview"
           >
             <Maximize2 size={14} />
@@ -199,7 +199,7 @@ function WebsiteArtifact({ artifact }) {
 
       {/* Main Body */}
       {activeTab === "preview" ? (
-        <div className="relative w-full h-[450px] bg-[#0c0817] overflow-hidden">
+        <div className="relative w-full h-[450px] bg-black overflow-hidden">
           <iframe
             srcDoc={srcDoc}
             title={artifact.title || "Web Preview"}
@@ -208,9 +208,9 @@ function WebsiteArtifact({ artifact }) {
           />
         </div>
       ) : (
-        <div className="flex flex-col bg-[#0e0a1d] text-slate-100 text-xs font-mono h-[450px]">
+        <div className="flex flex-col bg-zinc-950 text-zinc-100 text-xs font-mono h-[450px]">
           {/* File Select Sub-Tabs */}
-          <div className="flex items-center justify-between px-3 py-2 bg-[#151028] border-b border-purple-500/20 overflow-x-auto">
+          <div className="flex items-center justify-between px-3 py-2 bg-zinc-900 border-b border-white/10 overflow-x-auto">
             <div className="flex items-center gap-1">
               {files.map((file, idx) => (
                 <button
@@ -218,8 +218,8 @@ function WebsiteArtifact({ artifact }) {
                   onClick={() => setSelectedFileIdx(idx)}
                   className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-[11px] font-medium transition cursor-pointer ${
                     selectedFileIdx === idx
-                      ? "bg-purple-600 text-white shadow-sm"
-                      : "text-slate-400 hover:text-purple-200 hover:bg-white/5"
+                      ? "bg-white text-black font-bold shadow-sm"
+                      : "text-zinc-400 hover:text-white hover:bg-white/5"
                   }`}
                 >
                   <FileCode size={12} />
@@ -230,15 +230,15 @@ function WebsiteArtifact({ artifact }) {
 
             <button
               onClick={handleCopyFile}
-              className="flex items-center gap-1 px-2.5 py-1 text-[11px] text-purple-300 hover:text-white bg-purple-950/40 hover:bg-purple-900/50 border border-purple-500/25 rounded transition cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-1 text-[11px] text-zinc-200 hover:text-white bg-zinc-800 hover:bg-zinc-700 border border-white/15 rounded transition cursor-pointer"
             >
-              {copied ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+              {copied ? <Check size={12} className="text-white" /> : <Copy size={12} />}
               <span>{copied ? "Copied" : "Copy Code"}</span>
             </button>
           </div>
 
           {/* File Code Display */}
-          <pre className="flex-1 p-4 overflow-auto text-[11px] leading-relaxed text-purple-100/90 whitespace-pre">
+          <pre className="flex-1 p-4 overflow-auto text-[11px] leading-relaxed text-zinc-300 whitespace-pre">
             <code>{files[selectedFileIdx]?.content || ""}</code>
           </pre>
         </div>
@@ -246,15 +246,15 @@ function WebsiteArtifact({ artifact }) {
 
       {/* Fullscreen Preview Modal */}
       {isFullscreen && (
-        <div className="fixed inset-0 z-50 flex flex-col bg-slate-950/95 backdrop-blur-lg">
-          <div className="flex items-center justify-between px-6 py-3 bg-slate-900 border-b border-slate-800 text-white">
+        <div className="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-lg">
+          <div className="flex items-center justify-between px-6 py-3 bg-zinc-950 border-b border-white/10 text-white">
             <div className="flex items-center gap-2">
-              <Globe size={18} className="text-purple-400" />
+              <Globe size={18} className="text-white" />
               <span className="font-bold text-sm">{artifact.title || "Web Application Live Preview"}</span>
             </div>
             <button
               onClick={() => setIsFullscreen(false)}
-              className="p-2 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition cursor-pointer"
+              className="p-2 rounded-full hover:bg-white/10 text-zinc-400 hover:text-white transition cursor-pointer"
             >
               <X size={20} />
             </button>

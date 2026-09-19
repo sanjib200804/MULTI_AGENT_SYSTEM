@@ -76,14 +76,14 @@ export default function NavBar() {
   return (
     <header
       className={`fixed top-0 left-0 z-50 w-full transition-all duration-300 ${
-        scrolled || location.pathname === "/chat"
-          ? "bg-[#0a0715]/85 backdrop-blur-xl border-b border-purple-500/15 py-3.5 shadow-[0_4px_30px_rgba(0,0,0,0.5)]"
+        scrolled || location.pathname === "/chat" || location.pathname === "/dashboard"
+          ? "bg-white/85 dark:bg-black/85 backdrop-blur-xl border-b border-black/10 dark:border-white/10 py-3.5 shadow-sm dark:shadow-[0_4px_30px_rgba(0,0,0,0.7)]"
           : "bg-transparent py-5"
       }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 md:px-12">
         
-        {/* Brand Logo & Name (matching reference tech cluster) */}
+        {/* Brand Logo & Name (Monochrome Tech Cluster) */}
         <Link 
           to="/" 
           onClick={closeMobileMenu} 
@@ -92,7 +92,7 @@ export default function NavBar() {
           {/* Hexagonal / Mesh Node Cluster Icon */}
           <div className="relative flex items-center justify-center size-8">
             <svg 
-              className="w-7 h-7 text-pink-500 drop-shadow-[0_0_12px_rgba(244,63,94,0.7)] transition-transform duration-300 group-hover:scale-105" 
+              className="w-7 h-7 text-slate-900 dark:text-white drop-shadow-[0_0_10px_rgba(0,0,0,0.15)] dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-transform duration-300 group-hover:scale-105" 
               viewBox="0 0 24 24" 
               fill="none" 
               xmlns="http://www.w3.org/2000/svg"
@@ -106,8 +106,8 @@ export default function NavBar() {
             </svg>
           </div>
           
-          <span className="text-xl font-bold tracking-tight text-white transition-colors">
-            Agentra<span className="text-pink-400 font-normal">.AI</span>
+          <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors">
+            Agentra<span className="text-slate-500 dark:text-zinc-400 font-normal">.AI</span>
           </span>
         </Link>
 
@@ -118,7 +118,7 @@ export default function NavBar() {
               key={link.name}
               href={link.href}
               onClick={(e) => handleNavClick(e, link)}
-              className="text-xs font-medium tracking-wide text-slate-300 hover:text-white transition-colors cursor-pointer"
+              className="text-xs font-medium tracking-wide text-slate-600 hover:text-slate-900 dark:text-zinc-400 dark:hover:text-white transition-colors cursor-pointer"
             >
               {link.name}
             </a>
@@ -130,24 +130,24 @@ export default function NavBar() {
           <ThemeToggle />
 
           {user && (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.06] border border-white/10 text-xs font-medium text-slate-200">
-              <Coins size={14} className="text-pink-400" />
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/[0.04] dark:bg-white/[0.06] border border-black/10 dark:border-white/10 text-xs font-medium text-slate-700 dark:text-zinc-300">
+              <Coins size={14} className="text-slate-700 dark:text-zinc-300" />
               <span>Credits:</span>
-              <span className="font-bold text-white">{userCredits}</span>
+              <span className="font-bold text-slate-900 dark:text-white">{userCredits}</span>
             </div>
           )}
 
           {!user ? (
             <button
               onClick={() => setIsAuthModalOpen(true)}
-              className="px-6 py-2 rounded-full bg-gradient-to-r from-rose-500 to-purple-600 hover:from-rose-400 hover:to-purple-500 text-xs font-semibold text-white transition duration-200 cursor-pointer shadow-[0_0_20px_rgba(244,63,94,0.45)] hover:shadow-[0_0_30px_rgba(244,63,94,0.65)]"
+              className="px-6 py-2 rounded-full bg-black hover:bg-slate-800 text-white dark:bg-white dark:hover:bg-zinc-200 dark:text-black text-xs font-bold transition duration-200 cursor-pointer shadow-md dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
             >
               Get Started
             </button>
           ) : (
             <div className="relative" ref={profileRef}>
               <button
-                className="flex items-center cursor-pointer ring-2 ring-pink-500/40 rounded-full"
+                className="flex items-center cursor-pointer ring-2 ring-white/30 rounded-full"
                 onClick={() => setOpenProfile(!openProfile)}
               >
                 <img
@@ -160,7 +160,7 @@ export default function NavBar() {
               <AnimatePresence>
                 {openProfile && (
                   <motion.div
-                    className="absolute right-0 mt-3 w-60 z-50 rounded-2xl bg-[#0b0f19] border border-white/10 shadow-2xl overflow-hidden text-left"
+                    className="absolute right-0 mt-3 w-60 z-50 rounded-2xl bg-zinc-950 border border-white/15 shadow-2xl overflow-hidden text-left"
                     initial={{ y: -10, scale: 0.95, opacity: 0 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -170,19 +170,19 @@ export default function NavBar() {
                       <p className="text-sm font-semibold text-white truncate">
                         {userName}
                       </p>
-                      <p className="text-xs text-slate-400 truncate">
+                      <p className="text-xs text-zinc-400 truncate">
                         {userEmail}
                       </p>
                     </div>
 
                     <button
-                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-slate-300 hover:bg-white/5 hover:text-white transition cursor-pointer"
+                      className="w-full flex items-center gap-2.5 px-4 py-2.5 text-xs text-zinc-300 hover:bg-white/5 hover:text-white transition cursor-pointer"
                       onClick={() => {
                         setOpenProfile(false);
                         navigate('/dashboard');
                       }}
                     >
-                      <LayoutDashboard size={14} className="text-blue-400" />
+                      <LayoutDashboard size={14} className="text-zinc-300" />
                       <span>Dashboard</span>
                     </button>
 
@@ -221,7 +221,7 @@ export default function NavBar() {
 
       {/* Mobile Drawer */}
       <div
-        className={`fixed inset-0 top-[65px] z-40 flex flex-col justify-between bg-[#030712]/95 backdrop-blur-2xl px-6 py-6 transition-all duration-300 md:hidden ${
+        className={`fixed inset-0 top-[65px] z-40 flex flex-col justify-between bg-black/95 backdrop-blur-2xl px-6 py-6 transition-all duration-300 md:hidden ${
           openMobileMenu
             ? "opacity-100 pointer-events-auto translate-y-0"
             : "opacity-0 pointer-events-none -translate-y-4"
@@ -233,7 +233,7 @@ export default function NavBar() {
               key={link.name}
               href={link.href}
               onClick={(e) => handleNavClick(e, link)}
-              className="rounded-xl px-4 py-3 text-sm font-medium text-slate-200 hover:bg-white/5 hover:text-white transition"
+              className="rounded-xl px-4 py-3 text-sm font-medium text-zinc-300 hover:bg-white/5 hover:text-white transition"
             >
               {link.name}
             </a>
@@ -243,14 +243,14 @@ export default function NavBar() {
         <div className="flex flex-col gap-3 pt-4 border-t border-white/10">
           {user ? (
             <>
-              <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-slate-300">
+              <div className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-medium text-zinc-300">
                 <span>Credits Balance</span>
                 <span className="font-bold text-white">{userCredits}</span>
               </div>
               <Link
                 to="/dashboard"
                 onClick={closeMobileMenu}
-                className="flex justify-center items-center gap-2 rounded-full bg-blue-600 text-white py-3 text-xs font-semibold shadow-lg shadow-blue-500/25"
+                className="flex justify-center items-center gap-2 rounded-full bg-white text-black py-3 text-xs font-semibold shadow-lg shadow-white/10"
               >
                 <span>Go to Dashboard</span>
                 <ArrowRight size={14} />
@@ -266,15 +266,15 @@ export default function NavBar() {
               </button>
             </>
           ) : (
-            <button
-              onClick={() => {
-                closeMobileMenu();
-                setIsAuthModalOpen(true);
-              }}
-              className="rounded-full bg-blue-600 hover:bg-blue-500 text-white py-3 text-xs font-semibold shadow-[0_0_20px_rgba(37,99,235,0.4)]"
-            >
-              Get Started
-            </button>
+              <button
+                onClick={() => {
+                  closeMobileMenu();
+                  setIsAuthModalOpen(true);
+                }}
+                className="rounded-full bg-white hover:bg-zinc-200 text-black py-3 text-xs font-bold shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+              >
+                Get Started
+              </button>
           )}
         </div>
       </div>

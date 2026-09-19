@@ -30,7 +30,7 @@ export default function MessageList({
           >
             {/* AI Avatar */}
             {!isUser && (
-              <div className="flex size-7 shrink-0 mt-0.5 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-xs font-bold shadow-[0_0_12px_rgba(168,85,247,0.35)] border border-purple-400/30">
+              <div className="flex size-7 shrink-0 mt-0.5 items-center justify-center rounded-lg bg-zinc-800 text-white text-xs font-bold shadow-sm border border-white/20">
                 <Bot size={14} />
               </div>
             )}
@@ -42,12 +42,12 @@ export default function MessageList({
             >
               {isUser ? (
                 /* User Message Pill */
-                <div className="rounded-2xl bg-[#1d1633]/90 border border-purple-500/30 text-slate-100 px-4 py-2.5 text-sm sm:text-[15px] whitespace-pre-wrap leading-relaxed shadow-[0_4px_20px_rgba(0,0,0,0.3),0_0_15px_rgba(168,85,247,0.15)] backdrop-blur-md">
+                <div className="rounded-2xl bg-zinc-800/90 border border-white/15 text-zinc-100 px-4 py-2.5 text-sm sm:text-[15px] whitespace-pre-wrap leading-relaxed shadow-sm backdrop-blur-md">
                   {text}
                 </div>
               ) : (
                 /* Assistant Message Body */
-                <div className="w-full text-sm sm:text-[15px] text-slate-200 leading-relaxed font-normal">
+                <div className="w-full text-sm sm:text-[15px] text-zinc-200 leading-relaxed font-normal">
                   <MarkdownMessage content={text} isUser={false} />
 
                   {/* Returned Images Grid */}
@@ -58,7 +58,7 @@ export default function MessageList({
                           key={idx}
                           src={img}
                           alt="Generated output"
-                          className="rounded-xl border border-purple-500/30 max-h-48 w-full object-cover shadow-[0_0_20px_rgba(168,85,247,0.2)]"
+                          className="rounded-xl border border-white/15 max-h-48 w-full object-cover shadow-sm"
                         />
                       ))}
                     </div>
@@ -75,18 +75,18 @@ export default function MessageList({
                   isUser ? "flex-row-reverse" : ""
                 }`}
               >
-                <span className="text-[10px] text-purple-300/60 font-mono">
+                <span className="text-[10px] text-zinc-500 font-mono">
                   {timeString}
                 </span>
                 {!isUser && (
                   <button
                     onClick={() => handleCopy(msg.id, text)}
-                    className="flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-purple-300/70 hover:text-purple-200 hover:bg-purple-950/30 rounded transition cursor-pointer"
+                    className="flex items-center gap-1 px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 hover:text-white hover:bg-white/10 rounded transition cursor-pointer"
                   >
                     {copiedId === msg.id ? (
                       <>
-                        <Check size={10} className="text-emerald-400" />
-                        <span className="text-emerald-400 font-semibold">Copied</span>
+                        <Check size={10} className="text-white" />
+                        <span className="text-white font-semibold">Copied</span>
                       </>
                     ) : (
                       <>
@@ -101,7 +101,7 @@ export default function MessageList({
 
             {/* User Avatar */}
             {isUser && (
-              <div className="flex size-7 shrink-0 mt-0.5 items-center justify-center rounded-lg bg-gradient-to-br from-fuchsia-600 to-pink-600 text-xs font-bold text-white shadow-[0_0_12px_rgba(217,70,239,0.35)] border border-pink-400/30">
+              <div className="flex size-7 shrink-0 mt-0.5 items-center justify-center rounded-lg bg-zinc-700 border border-white/20 text-xs font-bold text-white shadow-sm">
                 {userInitials}
               </div>
             )}
@@ -112,12 +112,12 @@ export default function MessageList({
       {/* Thinking Indicator */}
       {isThinking && (
         <div className="flex items-center gap-3">
-          <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-purple-600 to-indigo-600 text-white text-xs font-bold shadow-[0_0_12px_rgba(168,85,247,0.35)] border border-purple-400/30">
+          <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-white text-xs font-bold border border-white/20 shadow-sm">
             <Bot size={14} />
           </div>
-          <div className="flex items-center gap-2 rounded-xl bg-[#161228]/90 border border-purple-500/30 px-4 py-2.5 text-xs text-purple-200 shadow-[0_0_20px_rgba(168,85,247,0.2)] backdrop-blur-md">
-            <span className="size-2 rounded-full bg-purple-400 animate-ping" />
-            <span className="font-mono text-purple-300 animate-pulse">Agentra is crafting your application…</span>
+          <div className="flex items-center gap-2 rounded-xl bg-zinc-900/90 border border-white/15 px-4 py-2.5 text-xs text-zinc-300 shadow-sm backdrop-blur-md">
+            <span className="size-2 rounded-full bg-white animate-ping" />
+            <span className="font-mono text-zinc-300 animate-pulse">Agentra is crafting your application…</span>
           </div>
         </div>
       )}

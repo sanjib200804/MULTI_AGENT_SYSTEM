@@ -67,30 +67,21 @@ export default function Home() {
   }, [location]);
 
   return (
-    <div className="relative min-h-screen bg-[#030208] bg-diamond-mesh text-slate-100 font-sans selection:bg-pink-500/30 selection:text-pink-200 overflow-x-hidden">
+    <div className="relative min-h-screen bg-slate-50 dark:bg-black bg-diamond-mesh text-slate-900 dark:text-zinc-100 font-sans selection:bg-[#4288BC]/30 selection:text-white overflow-x-hidden transition-colors duration-200">
       
-      {/* Radiant Glowing Ambient Light Auroras across the entire page (Matching Reference Design V2) */}
+      {/* Ambient Depth Halos for Light and Dark Modes */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden="true">
-        {/* Top-Left Rose/Pink Neon Halo */}
-        <div className="absolute -top-32 -left-32 w-[700px] h-[700px] rounded-full bg-rose-500/15 blur-[160px] animate-pulse-aura" />
+        {/* Top Ambient Light */}
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full bg-[#4288BC]/[0.08] dark:bg-white/[0.035] blur-[150px] animate-pulse-aura" />
         
-        {/* Top-Right Electric Violet/Purple Glow */}
-        <div className="absolute -top-20 right-[-15%] w-[800px] h-[800px] rounded-full bg-purple-600/18 blur-[170px] animate-pulse-aura" style={{ animationDelay: "3s" }} />
+        {/* Mid Subtle Glow */}
+        <div className="absolute top-[40%] left-[-10%] w-[800px] h-[800px] rounded-full bg-[#4288BC]/[0.04] dark:bg-white/[0.02] blur-[160px]" />
 
-        {/* Mid-Page Magenta / Fuchsia Glow */}
-        <div className="absolute top-[28%] left-[-10%] w-[750px] h-[650px] rounded-full bg-pink-600/15 blur-[170px] animate-pulse-aura" style={{ animationDelay: "1.5s" }} />
-
-        {/* Ecosystem Neon Violet Glow */}
-        <div className="absolute top-[48%] right-[-10%] w-[850px] h-[700px] rounded-full bg-violet-600/16 blur-[180px] animate-pulse-aura" style={{ animationDelay: "4.5s" }} />
-
-        {/* Architecture Rose/Pink Glow */}
-        <div className="absolute top-[68%] left-[10%] w-[900px] h-[650px] rounded-full bg-rose-600/14 blur-[170px] animate-pulse-aura" style={{ animationDelay: "2s" }} />
-
-        {/* Bottom CTA / Footer Radiant Glow */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-[1000px] h-[550px] rounded-full bg-gradient-to-r from-rose-600/18 via-pink-500/22 to-purple-600/18 blur-[160px] pointer-events-none" />
+        {/* Bottom Ambient Glow */}
+        <div className="absolute bottom-10 right-[-10%] w-[900px] h-[700px] rounded-full bg-[#4288BC]/[0.05] dark:bg-white/[0.025] blur-[160px]" />
       </div>
 
-      {/* 1. Cosmic Hero Section (Reference Design Masterpiece) */}
+      {/* 1. Cosmic Hero Section (Clean High-Contrast Monochrome Masterpiece) */}
       <HeroCosmic 
         onCtaClick={handleCtaClick} 
         onExploreClick={handleExploreClick} 

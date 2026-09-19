@@ -112,12 +112,12 @@ export default function Chat() {
 
     if (loading) {
         return (
-            <div className="flex h-screen w-screen items-center justify-center bg-[#0a0715] text-white">
+            <div className="flex h-screen w-screen items-center justify-center bg-black text-white">
                 <div className="flex flex-col items-center gap-4">
-                    <div className="relative flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-600 to-fuchsia-600 shadow-[0_0_25px_rgba(168,85,247,0.5)] border border-purple-400/30">
-                        <Sparkles size={24} className="animate-spin text-white" />
+                    <div className="relative flex size-12 items-center justify-center rounded-2xl bg-white/[0.06] border border-white/20 shadow-[0_0_25px_rgba(255,255,255,0.1)]">
+                        <Sparkles size={22} className="animate-spin text-white" />
                     </div>
-                    <p className="text-xs font-semibold text-purple-300/80 tracking-widest uppercase animate-pulse">
+                    <p className="text-xs font-semibold text-zinc-400 tracking-widest uppercase animate-pulse">
                         Initializing Agentra AI…
                     </p>
                 </div>
@@ -255,7 +255,7 @@ export default function Chat() {
     const userInitials = (user.fullname || user.displayName || "U").slice(0, 1).toUpperCase();
 
     return (
-        <div className="flex h-screen w-screen bg-[#0a0715] text-slate-100 font-sans overflow-hidden pt-16 selection:bg-purple-500/30">
+        <div className="flex h-screen w-screen bg-black bg-diamond-mesh text-zinc-100 font-sans overflow-hidden pt-16 selection:bg-white/20">
 
             {/* Sidebar component */}
             <Sidebar
@@ -271,17 +271,19 @@ export default function Chat() {
             />
 
             {/* MAIN CONTENT AREA */}
-            <main className="relative flex flex-1 flex-col h-full overflow-hidden bg-[#0d0a1a] bg-gradient-to-b from-[#120d26] via-[#0d0a1a] to-[#0a0715]">
+            <main className="relative flex flex-1 flex-col h-full overflow-hidden bg-black">
 
-                {/* Ambient cosmic lighting in viewport */}
-                <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[650px] h-[340px] bg-purple-900/15 blur-[140px] pointer-events-none rounded-full" />
-                <div className="absolute bottom-28 right-12 w-[350px] h-[250px] bg-fuchsia-950/10 blur-[120px] pointer-events-none rounded-full" />
+                {/* Subtle Ambient Monochrome lighting in viewport */}
+                <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+                    <div className="absolute top-8 left-1/2 -translate-x-1/2 w-[750px] h-[360px] bg-white/[0.02] blur-[140px] pointer-events-none rounded-full" />
+                    <div className="absolute bottom-28 right-12 w-[450px] h-[300px] bg-white/[0.015] blur-[120px] pointer-events-none rounded-full" />
+                </div>
 
                 {/* Floating sidebar open button (visible whenever sidebar is hidden) */}
                 {!sidebarOpen && (
                     <button
                         onClick={() => setSidebarOpen(true)}
-                        className="fixed top-20 left-4 z-30 p-2 rounded-xl bg-[#161226]/90 border border-purple-500/35 text-purple-200 hover:text-white hover:border-purple-400 shadow-[0_0_15px_rgba(168,85,247,0.25)] backdrop-blur-md transition cursor-pointer"
+                        className="fixed top-20 left-4 z-30 p-2 rounded-xl bg-zinc-950/90 border border-white/20 text-zinc-300 hover:text-white hover:border-white/40 shadow-md backdrop-blur-md transition cursor-pointer"
                         title="Open Sidebar"
                     >
                         <PanelLeft size={18} />
